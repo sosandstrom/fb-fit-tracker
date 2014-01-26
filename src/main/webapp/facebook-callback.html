@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Signin in...</title>
+    </head>
+    <body>
+        <h1 id="h1">Signing in...</h1>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/common.js"></script>
+        <script type="text/javascript" src="/js/oauth2.js"></script>
+        <script type="text/javascript">
+
+$(function() {
+    var jConnection = registerFederated("/oauth", "", "", "facebook");
+    if (201 == jConnection.statusCode) {
+        document.location.href = "/register.html";
+    }
+    else if (200 == jConnection.statusCode) {
+        document.location.href = "/home.html";
+    }
+    else {
+        $("#h1").text("Error " + jConnection.statusCode + "!");
+    }
+});
+        </script>
+    </body>
+</html>

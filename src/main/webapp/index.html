@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sign in</title>
+    </head>
+    <body>
+
+        <div class="container">
+            <a id="signin" href="#" >Sign in with Facebook</a>
+        </div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript">
+            if (-1 < location.href.search('localhost')) {
+                $("#signin").attr("href", "https://www.facebook.com/dialog/oauth?response_type=token&client_id=255653361131262&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Ffacebook-callback.html");
+            }
+            else {
+                $("#signin").attr("href", "https://www.facebook.com/dialog/oauth?response_type=token&client_id=333606306743106&redirect_uri=http%3A%2F%2Fapp-ID.appspot.com%2Ffacebook-callback.html");
+            }
+        </script>
+    </body>
+</html>
