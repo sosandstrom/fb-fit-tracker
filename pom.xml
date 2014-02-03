@@ -72,6 +72,11 @@
       <artifactId>mardao-gae</artifactId>
       <version>${mardao.version}</version>
     </dependency>
+    <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava-collections</artifactId>
+        <version>r03</version>
+    </dependency>
   </dependencies>
 
   <build>

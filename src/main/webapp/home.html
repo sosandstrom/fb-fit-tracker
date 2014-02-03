@@ -3,19 +3,27 @@
         <title>Home</title>
     </head>
     <body>
-
+        <a href="/api/tracker?raceId=1">Create Fitness run</a>
+        <table>
+            <thead>
+                <tr>
+                    <th>raceId</th><th>fitness actionId</th>
+                </tr>
+            </thead>
+            <tbody id="racesBody"></tbody>
+        </table>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="/js/crud_api.js"></script>
         <script type="text/javascript">
                             $(function() {
-//                                crud_Read("api/oauth2user", "me")
-//                                        .success(function(data) {
-//                                    console.log(data);
-//                                    $("#userId").val(data.id);
-//                                    $("#headerUsername").text(data.displayName);
-//                                    $("#phoneNumber").val(data.phoneNumber);
-//                                    $("#email").val(data.email);
-//                                });
+                                crud_Read("api/participant", "me")
+                                .done(function(data, statusText, jqXHR) {
+                                    $.each(data, function(index, item) {
+                                        $("#racesBody").append("<tr><td>" +
+                                            item.raceId + "</td><td>" + item.actionId + 
+                                            "</td></tr>");
+                                    });
+                                });
                             });
         </script>
     </body>

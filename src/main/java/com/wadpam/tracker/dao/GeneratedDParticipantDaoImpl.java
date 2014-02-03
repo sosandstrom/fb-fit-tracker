@@ -15,16 +15,16 @@ import net.sf.mardao.core.Filter;
 import net.sf.mardao.core.dao.DaoImpl;
 import net.sf.mardao.core.dao.TypeDaoImpl;
 import net.sf.mardao.core.geo.DLocation;
-import com.wadpam.tracker.domain.DRace;
+import com.wadpam.tracker.domain.DParticipant;
 
 /**
- * The DRace domain-object specific finders and methods go in this POJO.
+ * The DParticipant domain-object specific finders and methods go in this POJO.
  * 
  * Generated on 2014-02-02T16:45:34.082+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
-public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long> 
-	implements GeneratedDRaceDao {
+public class GeneratedDParticipantDaoImpl extends TypeDaoImpl<DParticipant, java.lang.Long> 
+	implements GeneratedDParticipantDao {
 
 
     /** to list the property names for ManyToOne relations */
@@ -42,8 +42,8 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
     private final Map<String, DaoImpl> MANY_TO_ONE_DAOS = new TreeMap<String, DaoImpl>();
 
     /** Default constructor */
-   public GeneratedDRaceDaoImpl() {
-      super(DRace.class, java.lang.Long.class);
+   public GeneratedDParticipantDaoImpl() {
+      super(DParticipant.class, java.lang.Long.class);
    }
 
    // ------ BEGIN DaoImpl overrides -----------------------------
@@ -62,33 +62,33 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
    }
 
     @Override
-    protected Object getDomainProperty(DRace domain, String name) {
+    protected Object getDomainProperty(DParticipant domain, String name) {
         Object value;
         // simple key?
         if (COLUMN_NAME_ID.equals(name)) {
             value = domain.getId();
         }
         // fields
+        else if (COLUMN_NAME_ACTIONID.equals(name)) {
+            value = domain.getActionId();
+        }
         else if (COLUMN_NAME_CREATEDBY.equals(name)) {
             value = domain.getCreatedBy();
         }
         else if (COLUMN_NAME_CREATEDDATE.equals(name)) {
             value = domain.getCreatedDate();
         }
-        else if (COLUMN_NAME_DISPLAYNAME.equals(name)) {
-            value = domain.getDisplayName();
-        }
-        else if (COLUMN_NAME_EXTRACTORCLASSNAME.equals(name)) {
-            value = domain.getExtractorClassname();
-        }
-        else if (COLUMN_NAME_QUERYURL.equals(name)) {
-            value = domain.getQueryUrl();
+        else if (COLUMN_NAME_RACEID.equals(name)) {
+            value = domain.getRaceId();
         }
         else if (COLUMN_NAME_UPDATEDBY.equals(name)) {
             value = domain.getUpdatedBy();
         }
         else if (COLUMN_NAME_UPDATEDDATE.equals(name)) {
             value = domain.getUpdatedDate();
+        }
+        else if (COLUMN_NAME_USERID.equals(name)) {
+            value = domain.getUserId();
         }
         // one-to-ones
         // many-to-ones
@@ -112,26 +112,26 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
             clazz = java.lang.Long.class;
         }
         // fields
+        else if (COLUMN_NAME_ACTIONID.equals(name)) {
+            clazz = java.lang.String.class;
+        }
         else if (COLUMN_NAME_CREATEDBY.equals(name)) {
             clazz = java.lang.String.class;
         }
         else if (COLUMN_NAME_CREATEDDATE.equals(name)) {
             clazz = java.util.Date.class;
         }
-        else if (COLUMN_NAME_DISPLAYNAME.equals(name)) {
-            clazz = java.lang.String.class;
-        }
-        else if (COLUMN_NAME_EXTRACTORCLASSNAME.equals(name)) {
-            clazz = java.lang.String.class;
-        }
-        else if (COLUMN_NAME_QUERYURL.equals(name)) {
-            clazz = java.lang.String.class;
+        else if (COLUMN_NAME_RACEID.equals(name)) {
+            clazz = java.lang.Long.class;
         }
         else if (COLUMN_NAME_UPDATEDBY.equals(name)) {
             clazz = java.lang.String.class;
         }
         else if (COLUMN_NAME_UPDATEDDATE.equals(name)) {
             clazz = java.util.Date.class;
+        }
+        else if (COLUMN_NAME_USERID.equals(name)) {
+            clazz = java.lang.Long.class;
         }
         // one-to-ones
         // many-to-ones
@@ -144,32 +144,32 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
     }
       
     @Override
-    protected void setDomainProperty(final DRace domain, final String name, final Object value) {
+    protected void setDomainProperty(final DParticipant domain, final String name, final Object value) {
         // simple key?
         if (COLUMN_NAME_ID.equals(name)) {
             domain.setId((java.lang.Long) value);
         }
         // fields
+        else if (COLUMN_NAME_ACTIONID.equals(name)) {
+            domain.setActionId((java.lang.String) value);
+        }
         else if (COLUMN_NAME_CREATEDBY.equals(name)) {
             domain.setCreatedBy((java.lang.String) value);
         }
         else if (COLUMN_NAME_CREATEDDATE.equals(name)) {
             domain.setCreatedDate((java.util.Date) value);
         }
-        else if (COLUMN_NAME_DISPLAYNAME.equals(name)) {
-            domain.setDisplayName((java.lang.String) value);
-        }
-        else if (COLUMN_NAME_EXTRACTORCLASSNAME.equals(name)) {
-            domain.setExtractorClassname((java.lang.String) value);
-        }
-        else if (COLUMN_NAME_QUERYURL.equals(name)) {
-            domain.setQueryUrl((java.lang.String) value);
+        else if (COLUMN_NAME_RACEID.equals(name)) {
+            domain.setRaceId((java.lang.Long) value);
         }
         else if (COLUMN_NAME_UPDATEDBY.equals(name)) {
             domain.setUpdatedBy((java.lang.String) value);
         }
         else if (COLUMN_NAME_UPDATEDDATE.equals(name)) {
             domain.setUpdatedDate((java.util.Date) value);
+        }
+        else if (COLUMN_NAME_USERID.equals(name)) {
+            domain.setUserId((java.lang.Long) value);
         }
         // one-to-ones
         // many-to-ones
@@ -180,7 +180,7 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
     }
 
     @Override
-    protected void setDomainStringProperty(final DRace domain, final String name, final Map<String, String> properties) {
+    protected void setDomainStringProperty(final DParticipant domain, final String name, final Map<String, String> properties) {
         final String value = properties.get(name);
         Class clazz = getColumnClass(name);
         // many-to-ones
@@ -203,12 +203,12 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 
    // ------ END DaoImpl overrides -----------------------------
 
-        // DRace has no parent
+        // DParticipant has no parent
 
         /**
-         * @return the simple key for specified DRace domain object
+         * @return the simple key for specified DParticipant domain object
          */
-        public Long getSimpleKey(DRace domain) {
+        public Long getSimpleKey(DParticipant domain) {
             if (null == domain) {
                 return null;
             }
@@ -216,9 +216,9 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
         }
 
         /**
-         * @return the simple key for specified DRace domain object
+         * @return the simple key for specified DParticipant domain object
          */
-        public void setSimpleKey(DRace domain, Long id) {
+        public void setSimpleKey(DParticipant domain, Long id) {
             domain.setId(id);
         }
 
@@ -226,14 +226,14 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
             return COLUMN_NAME_CREATEDBY;
         }
 
-        public String getCreatedBy(DRace domain) {
+        public String getCreatedBy(DParticipant domain) {
             if (null == domain) {
                 return null;
             }
             return domain.getCreatedBy();
         }
 
-        public void _setCreatedBy(DRace domain, String creator) {
+        public void _setCreatedBy(DParticipant domain, String creator) {
             domain.setCreatedBy(creator);
         }
 
@@ -241,14 +241,14 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
             return COLUMN_NAME_UPDATEDBY;
         }
 
-        public String getUpdatedBy(DRace domain) {
+        public String getUpdatedBy(DParticipant domain) {
             if (null == domain) {
                 return null;
             }
             return domain.getUpdatedBy();
         }
 
-        public void _setUpdatedBy(DRace domain, String updator) {
+        public void _setUpdatedBy(DParticipant domain, String updator) {
             domain.setUpdatedBy(updator);
         }
 
@@ -256,14 +256,14 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
             return COLUMN_NAME_CREATEDDATE;
         }
 
-        public Date getCreatedDate(DRace domain) {
+        public Date getCreatedDate(DParticipant domain) {
             if (null == domain) {
                 return null;
             }
             return domain.getCreatedDate();
         }
 
-        public void _setCreatedDate(DRace domain, Date date) {
+        public void _setCreatedDate(DParticipant domain, Date date) {
             domain.setCreatedDate(date);
         }
 
@@ -271,22 +271,42 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
             return COLUMN_NAME_UPDATEDDATE;
         }
 
-        public Date getUpdatedDate(DRace domain) {
+        public Date getUpdatedDate(DParticipant domain) {
             if (null == domain) {
                 return null;
             }
             return domain.getUpdatedDate();
         }
 
-        public void _setUpdatedDate(DRace domain, Date date) {
+        public void _setUpdatedDate(DParticipant domain, Date date) {
             domain.setUpdatedDate(date);
         }
 
 	// ----------------------- field finders -------------------------------
 	/**
+	 * find-by method for unique attribute field actionId
+	 * @param actionId the unique attribute
+	 * @return the unique DParticipant for the specified attribute
+	 */
+	public final DParticipant findByActionId(java.lang.String actionId) {
+                Filter filter = createEqualsFilter(COLUMN_NAME_ACTIONID, actionId);
+		return findUniqueBy(filter);
+	}
+
+	/**
+	 * find-key-by method for unique attribute field actionId
+	 * @param actionId the unique attribute
+	 * @return the unique DParticipant for the specified attribute
+	 */
+	public final java.lang.Long findKeyByActionId(java.lang.String actionId) {
+                Filter filter = createEqualsFilter(COLUMN_NAME_ACTIONID, actionId);
+		return findUniqueKeyBy(filter);
+	}
+	 
+	/**
          * {@inheritDoc}
 	 */
-	public final Iterable<DRace> queryByCreatedBy(java.lang.String createdBy) {
+	public final Iterable<DParticipant> queryByCreatedBy(java.lang.String createdBy) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_CREATEDBY, createdBy);
             return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
 	}
@@ -294,7 +314,7 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	/**
 	 * query-key-by method for attribute field createdBy
 	 * @param createdBy the specified attribute
-	 * @return an Iterable of keys to the DRaces with the specified attribute
+	 * @return an Iterable of keys to the DParticipants with the specified attribute
 	 */
 	public final Iterable<java.lang.Long> queryKeysByCreatedBy(java.lang.String createdBy) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_CREATEDBY, createdBy);
@@ -306,9 +326,9 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	 * @param createdBy the specified attribute
          * @param pageSize the number of domain entities in the page
          * @param cursorString non-null if get next page
-	 * @return a Page of DRaces for the specified createdBy
+	 * @return a Page of DParticipants for the specified createdBy
 	 */
-	public final CursorPage<DRace> queryPageByCreatedBy(java.lang.String createdBy,
+	public final CursorPage<DParticipant> queryPageByCreatedBy(java.lang.String createdBy,
             int pageSize, String cursorString) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_CREATEDBY, createdBy);
             return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
@@ -318,7 +338,7 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	/**
          * {@inheritDoc}
 	 */
-	public final Iterable<DRace> queryByCreatedDate(java.util.Date createdDate) {
+	public final Iterable<DParticipant> queryByCreatedDate(java.util.Date createdDate) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_CREATEDDATE, createdDate);
             return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
 	}
@@ -326,7 +346,7 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	/**
 	 * query-key-by method for attribute field createdDate
 	 * @param createdDate the specified attribute
-	 * @return an Iterable of keys to the DRaces with the specified attribute
+	 * @return an Iterable of keys to the DParticipants with the specified attribute
 	 */
 	public final Iterable<java.lang.Long> queryKeysByCreatedDate(java.util.Date createdDate) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_CREATEDDATE, createdDate);
@@ -338,9 +358,9 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	 * @param createdDate the specified attribute
          * @param pageSize the number of domain entities in the page
          * @param cursorString non-null if get next page
-	 * @return a Page of DRaces for the specified createdDate
+	 * @return a Page of DParticipants for the specified createdDate
 	 */
-	public final CursorPage<DRace> queryPageByCreatedDate(java.util.Date createdDate,
+	public final CursorPage<DParticipant> queryPageByCreatedDate(java.util.Date createdDate,
             int pageSize, String cursorString) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_CREATEDDATE, createdDate);
             return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
@@ -350,31 +370,31 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	/**
          * {@inheritDoc}
 	 */
-	public final Iterable<DRace> queryByDisplayName(java.lang.String displayName) {
-            final Filter filter = createEqualsFilter(COLUMN_NAME_DISPLAYNAME, displayName);
+	public final Iterable<DParticipant> queryByRaceId(java.lang.Long raceId) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_RACEID, raceId);
             return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
 	}
 	
 	/**
-	 * query-key-by method for attribute field displayName
-	 * @param displayName the specified attribute
-	 * @return an Iterable of keys to the DRaces with the specified attribute
+	 * query-key-by method for attribute field raceId
+	 * @param raceId the specified attribute
+	 * @return an Iterable of keys to the DParticipants with the specified attribute
 	 */
-	public final Iterable<java.lang.Long> queryKeysByDisplayName(java.lang.String displayName) {
-            final Filter filter = createEqualsFilter(COLUMN_NAME_DISPLAYNAME, displayName);
+	public final Iterable<java.lang.Long> queryKeysByRaceId(java.lang.Long raceId) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_RACEID, raceId);
             return queryIterableKeys(0, -1, null, null, null, false, null, false, filter);
 	}
 
 	/**
-	 * query-page-by method for field displayName
-	 * @param displayName the specified attribute
+	 * query-page-by method for field raceId
+	 * @param raceId the specified attribute
          * @param pageSize the number of domain entities in the page
          * @param cursorString non-null if get next page
-	 * @return a Page of DRaces for the specified displayName
+	 * @return a Page of DParticipants for the specified raceId
 	 */
-	public final CursorPage<DRace> queryPageByDisplayName(java.lang.String displayName,
+	public final CursorPage<DParticipant> queryPageByRaceId(java.lang.Long raceId,
             int pageSize, String cursorString) {
-            final Filter filter = createEqualsFilter(COLUMN_NAME_DISPLAYNAME, displayName);
+            final Filter filter = createEqualsFilter(COLUMN_NAME_RACEID, raceId);
             return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
         }
 
@@ -382,71 +402,7 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	/**
          * {@inheritDoc}
 	 */
-	public final Iterable<DRace> queryByExtractorClassname(java.lang.String extractorClassname) {
-            final Filter filter = createEqualsFilter(COLUMN_NAME_EXTRACTORCLASSNAME, extractorClassname);
-            return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
-	}
-	
-	/**
-	 * query-key-by method for attribute field extractorClassname
-	 * @param extractorClassname the specified attribute
-	 * @return an Iterable of keys to the DRaces with the specified attribute
-	 */
-	public final Iterable<java.lang.Long> queryKeysByExtractorClassname(java.lang.String extractorClassname) {
-            final Filter filter = createEqualsFilter(COLUMN_NAME_EXTRACTORCLASSNAME, extractorClassname);
-            return queryIterableKeys(0, -1, null, null, null, false, null, false, filter);
-	}
-
-	/**
-	 * query-page-by method for field extractorClassname
-	 * @param extractorClassname the specified attribute
-         * @param pageSize the number of domain entities in the page
-         * @param cursorString non-null if get next page
-	 * @return a Page of DRaces for the specified extractorClassname
-	 */
-	public final CursorPage<DRace> queryPageByExtractorClassname(java.lang.String extractorClassname,
-            int pageSize, String cursorString) {
-            final Filter filter = createEqualsFilter(COLUMN_NAME_EXTRACTORCLASSNAME, extractorClassname);
-            return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
-        }
-
-	 
-	/**
-         * {@inheritDoc}
-	 */
-	public final Iterable<DRace> queryByQueryUrl(java.lang.String queryUrl) {
-            final Filter filter = createEqualsFilter(COLUMN_NAME_QUERYURL, queryUrl);
-            return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
-	}
-	
-	/**
-	 * query-key-by method for attribute field queryUrl
-	 * @param queryUrl the specified attribute
-	 * @return an Iterable of keys to the DRaces with the specified attribute
-	 */
-	public final Iterable<java.lang.Long> queryKeysByQueryUrl(java.lang.String queryUrl) {
-            final Filter filter = createEqualsFilter(COLUMN_NAME_QUERYURL, queryUrl);
-            return queryIterableKeys(0, -1, null, null, null, false, null, false, filter);
-	}
-
-	/**
-	 * query-page-by method for field queryUrl
-	 * @param queryUrl the specified attribute
-         * @param pageSize the number of domain entities in the page
-         * @param cursorString non-null if get next page
-	 * @return a Page of DRaces for the specified queryUrl
-	 */
-	public final CursorPage<DRace> queryPageByQueryUrl(java.lang.String queryUrl,
-            int pageSize, String cursorString) {
-            final Filter filter = createEqualsFilter(COLUMN_NAME_QUERYURL, queryUrl);
-            return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
-        }
-
-	 
-	/**
-         * {@inheritDoc}
-	 */
-	public final Iterable<DRace> queryByUpdatedBy(java.lang.String updatedBy) {
+	public final Iterable<DParticipant> queryByUpdatedBy(java.lang.String updatedBy) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_UPDATEDBY, updatedBy);
             return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
 	}
@@ -454,7 +410,7 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	/**
 	 * query-key-by method for attribute field updatedBy
 	 * @param updatedBy the specified attribute
-	 * @return an Iterable of keys to the DRaces with the specified attribute
+	 * @return an Iterable of keys to the DParticipants with the specified attribute
 	 */
 	public final Iterable<java.lang.Long> queryKeysByUpdatedBy(java.lang.String updatedBy) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_UPDATEDBY, updatedBy);
@@ -466,9 +422,9 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	 * @param updatedBy the specified attribute
          * @param pageSize the number of domain entities in the page
          * @param cursorString non-null if get next page
-	 * @return a Page of DRaces for the specified updatedBy
+	 * @return a Page of DParticipants for the specified updatedBy
 	 */
-	public final CursorPage<DRace> queryPageByUpdatedBy(java.lang.String updatedBy,
+	public final CursorPage<DParticipant> queryPageByUpdatedBy(java.lang.String updatedBy,
             int pageSize, String cursorString) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_UPDATEDBY, updatedBy);
             return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
@@ -478,7 +434,7 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	/**
          * {@inheritDoc}
 	 */
-	public final Iterable<DRace> queryByUpdatedDate(java.util.Date updatedDate) {
+	public final Iterable<DParticipant> queryByUpdatedDate(java.util.Date updatedDate) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_UPDATEDDATE, updatedDate);
             return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
 	}
@@ -486,7 +442,7 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	/**
 	 * query-key-by method for attribute field updatedDate
 	 * @param updatedDate the specified attribute
-	 * @return an Iterable of keys to the DRaces with the specified attribute
+	 * @return an Iterable of keys to the DParticipants with the specified attribute
 	 */
 	public final Iterable<java.lang.Long> queryKeysByUpdatedDate(java.util.Date updatedDate) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_UPDATEDDATE, updatedDate);
@@ -498,11 +454,43 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	 * @param updatedDate the specified attribute
          * @param pageSize the number of domain entities in the page
          * @param cursorString non-null if get next page
-	 * @return a Page of DRaces for the specified updatedDate
+	 * @return a Page of DParticipants for the specified updatedDate
 	 */
-	public final CursorPage<DRace> queryPageByUpdatedDate(java.util.Date updatedDate,
+	public final CursorPage<DParticipant> queryPageByUpdatedDate(java.util.Date updatedDate,
             int pageSize, String cursorString) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_UPDATEDDATE, updatedDate);
+            return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
+        }
+
+	 
+	/**
+         * {@inheritDoc}
+	 */
+	public final Iterable<DParticipant> queryByUserId(java.lang.Long userId) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_USERID, userId);
+            return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
+	}
+	
+	/**
+	 * query-key-by method for attribute field userId
+	 * @param userId the specified attribute
+	 * @return an Iterable of keys to the DParticipants with the specified attribute
+	 */
+	public final Iterable<java.lang.Long> queryKeysByUserId(java.lang.Long userId) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_USERID, userId);
+            return queryIterableKeys(0, -1, null, null, null, false, null, false, filter);
+	}
+
+	/**
+	 * query-page-by method for field userId
+	 * @param userId the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DParticipants for the specified userId
+	 */
+	public final CursorPage<DParticipant> queryPageByUserId(java.lang.Long userId,
+            int pageSize, String cursorString) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_USERID, userId);
             return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
         }
 
@@ -514,34 +502,52 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	// ----------------------- many-to-many finders -------------------------
 
 	// ----------------------- uniqueFields finders -------------------------
+	/**
+	 * find-by method for unique attributes
+	 * @param raceId the specified raceId
+	 * @param userId the specified userId
+	 * @return the unique DParticipant for the specified fields
+	 */
+	public final DParticipant findByRaceIdUserId(java.lang.Long raceId, java.lang.Long userId) {
+		final Filter[] filters = new Filter[2];
+                int i = 0;
+                filters[i++] = createEqualsFilter(COLUMN_NAME_RACEID, raceId);
+                filters[i++] = createEqualsFilter(COLUMN_NAME_USERID, userId);
+		return findUniqueBy(filters);
+	}
 
 	// ----------------------- populate / persist method -------------------------
 
 	/**
 	 * Persist an entity given all attributes
 	 */
-	public DRace persist(		java.lang.Long id, 
-		java.lang.String displayName, 
-		java.lang.String extractorClassname, 
-		java.lang.String queryUrl) {
+	public DParticipant persist(		java.lang.Long id, 
+		java.lang.String actionId, 
+		java.lang.Long raceId, 
+		java.lang.Long userId) {
 
-            DRace domain = null;
+            DParticipant domain = null;
             // if primaryKey specified, use it
             if (null != id) {
                     domain = findByPrimaryKey(id);
             }
 		
+            // use find-by unique column set
+            if (null == domain) {
+                domain = findByRaceIdUserId(
+                    raceId,                     userId);
+            }
             // create new?
             if (null == domain) {
-                    domain = new DRace();
+                    domain = new DParticipant();
                     // generate Id?
                     if (null != id) {
                             domain.setId(id);
                     }
                     // fields
-                    domain.setDisplayName(displayName);
-                    domain.setExtractorClassname(extractorClassname);
-                    domain.setQueryUrl(queryUrl);
+                    domain.setActionId(actionId);
+                    domain.setRaceId(raceId);
+                    domain.setUserId(userId);
                     // one-to-ones
                     // many-to-ones
 			
@@ -550,6 +556,23 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
             return domain;
 	}
 
+
+	/**
+	 * Persists an entity unless it already exists
+	 */
+	public DParticipant persist(java.lang.String actionId, 
+                java.lang.Long raceId, 
+                java.lang.Long userId) {
+            DParticipant domain = findByActionId(actionId);
+            if (null == domain) {
+                domain = new DParticipant();
+                domain.setActionId(actionId);
+                domain.setRaceId(raceId);
+                domain.setUserId(userId);
+                persist(domain);
+            }
+            return domain;
+	}
 
 
 }

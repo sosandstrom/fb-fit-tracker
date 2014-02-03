@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>Upload</title>
+    </head>
+    <body>
+        <form method="POST" action="#" id="uploadForm" enctype="multipart/form-data">
+            <input type="file" name="gpxFile" />
+            <input type="submit" />
+        </form>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="/js/crud_api.js"></script>
+        <script type="text/javascript">
+                            $(function() {
+                                crud_Read("public", "upload")
+                                .done(function(data, statusText, jqXHR) {
+                                    $("#uploadForm").attr("action", data.uploadUrl);
+                                });
+                            });
+        </script>
+    </body>
+</html>

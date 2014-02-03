@@ -12,7 +12,7 @@ import net.sf.mardao.core.geo.DLocation;
 /**
  * DAO interface with finder methods for DRace entities.
  *
- * Generated on 2014-01-24T20:26:57.207+0100.
+ * Generated on 2014-02-02T16:45:34.082+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {

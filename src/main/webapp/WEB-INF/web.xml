@@ -9,7 +9,15 @@
     </filter>
     <filter-mapping>
         <filter-name>guice</filter-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>guice</filter-name>
+        <url-pattern>/oauth/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>guice</filter-name>
+        <url-pattern>/public/*</url-pattern>
     </filter-mapping>
     <security-constraint>
         <web-resource-collection>

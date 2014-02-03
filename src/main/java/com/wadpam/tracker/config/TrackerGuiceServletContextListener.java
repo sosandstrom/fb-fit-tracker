@@ -12,6 +12,8 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 import com.wadpam.mardao.guice.MardaoGuiceModule;
 import com.wadpam.mardao.oauth.web.OAuth2Filter;
+import com.wadpam.tracker.dao.DParticipantDao;
+import com.wadpam.tracker.dao.DParticipantDaoBean;
 import com.wadpam.tracker.dao.DRaceDao;
 import com.wadpam.tracker.dao.DRaceDaoBean;
 
@@ -32,6 +34,7 @@ public class TrackerGuiceServletContextListener extends GuiceServletContextListe
 
         private final void bindDaos() {
           bind(DRaceDao.class).to(DRaceDaoBean.class);
+          bind(DParticipantDao.class).to(DParticipantDaoBean.class);
         }
 
         @Override
