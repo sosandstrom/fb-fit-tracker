@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author osandstrom
  */
-@Path("public")
+@Path("nosec")
 public class CourseResource {
     
     static final Logger LOGGER = LoggerFactory.getLogger(CourseResource.class);
@@ -63,14 +63,28 @@ public class CourseResource {
     @Path("upload")
     public Response getUploadUrl() {
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-        String uploadUrl = blobstoreService.createUploadUrl("/public/upload");
+        String uploadUrl = blobstoreService.createUploadUrl("/nosec/uploadCallback");
+        LOGGER.info("GET uploadUrl={}", uploadUrl);
         Map<String, String> entity = ImmutableMap.of("uploadUrl", uploadUrl);
         return Response.ok(entity).build();
     }
     
     @POST
-    @Path("upload")
+    @Path("uploadCallback")
     public Response uploadCallback() {
+        LOGGER.info("POST uploadCallback");
+        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+        Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
+        for (BlobKey blobKey : blobs.get("gpxFile")) {
+            LOGGER.info("uploaded {}", blobKey.getKeyString());
+        }
+        return Response.ok().build();
+    }
+    
+    @GET
+    @Path("uploadCallback")
+    public Response uploadCallbackGet() {
+        LOGGER.info("GET uploadCallback");
         BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
         Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
         for (BlobKey blobKey : blobs.get("gpxFile")) {

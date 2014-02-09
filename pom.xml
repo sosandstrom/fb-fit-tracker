@@ -11,7 +11,7 @@
   <!-- Specify hard-coded project properties here -->
   <properties>
     <mardao.version>2.3.4-SNAPSHOT</mardao.version>
-    <gae.version>1.7.5</gae.version>
+    <gae.version>1.7.7</gae.version>
     <gae.application.version>lab</gae.application.version>
     <gae.application.id>${project.artifactId}</gae.application.id>
     <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
@@ -76,6 +76,18 @@
         <groupId>com.google.guava</groupId>
         <artifactId>guava-collections</artifactId>
         <version>r03</version>
+    </dependency>
+    <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-api-stubs</artifactId>
+        <version>${gae.version}</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>com.google.appengine</groupId>
+        <artifactId>appengine-testing</artifactId>
+        <version>${gae.version}</version>
+        <scope>test</scope>
     </dependency>
   </dependencies>
 

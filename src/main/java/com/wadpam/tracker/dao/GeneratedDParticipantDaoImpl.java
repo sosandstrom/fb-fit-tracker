@@ -20,7 +20,7 @@ import com.wadpam.tracker.domain.DParticipant;
 /**
  * The DParticipant domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2014-02-02T16:45:34.082+0100.
+ * Generated on 2014-02-09T19:07:44.513+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDParticipantDaoImpl extends TypeDaoImpl<DParticipant, java.lang.Long> 
