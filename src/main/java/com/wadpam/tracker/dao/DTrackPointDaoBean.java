@@ -1,19 +1,28 @@
 package com.wadpam.tracker.dao;
 
+import com.google.appengine.api.datastore.Query;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
+import com.wadpam.tracker.api.PublicResource;
+import com.wadpam.tracker.domain.DParticipant;
 import com.wadpam.tracker.domain.DRace;
+import com.wadpam.tracker.domain.DSplit;
 import com.wadpam.tracker.domain.DTrackPoint;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.TimeZone;
+import java.util.TreeMap;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import net.sf.mardao.core.Filter;
 import net.sf.mardao.core.geo.DLocation;
+import net.sf.mardao.core.geo.Geobox;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -30,6 +39,9 @@ public class DTrackPointDaoBean
 	extends GeneratedDTrackPointDaoImpl
 		implements DTrackPointDao 
 {
+    /** 2014-01-25T09:01:35.000Z */
+    public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+
     final DRaceDao raceDao;
 
     @Inject
@@ -41,6 +53,27 @@ public class DTrackPointDaoBean
     public DTrackPointDaoBean() {
         this.raceDao = null;
     }
+
+    @Override
+    public DTrackPoint findNearest(Object raceKey, long minTimestamp, Float lat, Float lon) {
+        Filter sinceFilter = createGreaterThanOrEqualFilter(COLUMN_NAME_TIMESTAMP, minTimestamp);
+        Iterable<DTrackPoint> points = queryIterable(false, 0, -1, raceKey, null, COLUMN_NAME_TIMESTAMP, true, null, false, sinceFilter);
+        DTrackPoint nearest = null;
+        double dNearest = Double.MAX_VALUE;
+        
+        // run thru all points
+        for (DTrackPoint p : points) {
+            if (null == lat) {
+                return p;
+            }
+            double d = Geobox.distance(lat, lon, p.getPoint().getLatitude(), p.getPoint().getLongitude());
+            if (d < dNearest) {
+                nearest = p;
+                dNearest = d;
+            }
+        }
+        return nearest;
+    }
     
 
     @Transactional
@@ -49,9 +82,7 @@ public class DTrackPointDaoBean
         try {
             SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
             DefaultHandler handler = new DefaultHandler() {
-                /** 2014-01-25T09:01:35.000Z */
-                final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS");
-                
+
                 private DTrackPoint trkpt;
                 private StringBuilder text = new StringBuilder();
                 private Object raceKey;
@@ -123,5 +154,41 @@ public class DTrackPointDaoBean
         }
     }
     
+    @Override
+    public void writeActivityDataPoints(StringBuilder sb, 
+            DParticipant participant, Iterable<DSplit> participantSplits, 
+            Object raceKey) {
+        
+        // find latest race timestamp (stored in trackPointId)
+        final TreeMap<Long, DSplit> splitMap = new TreeMap<Long, DSplit>();
+        for (DSplit split : participantSplits) {
+            splitMap.put(split.getTrackPointId(), split);
+        }
+        final long maxTimestamp = splitMap.lastKey();
+        
+        // iterate track points until timestamp
+        final Filter maxTimeFilter = new Filter(COLUMN_NAME_TIMESTAMP, Query.FilterOperator.LESS_THAN_OR_EQUAL, maxTimestamp);
+        Iterable<DTrackPoint> points = queryIterable(false, 0, -1, raceKey, null, COLUMN_NAME_TIMESTAMP, true, null, false, maxTimeFilter);
+        Iterator<DTrackPoint> ptIterator = points.iterator();
+        
+        long prevRaceSplit = 0L, prevPartSplit = 0L, t;
+        Collection<DSplit> i = splitMap.values();
+        DTrackPoint trkpt;
+        for (DSplit next : i) {
+            
+            // linear interpolation between splits
+            double factor = (next.getTimestamp() - prevPartSplit) / (next.getTrackPointId() - prevRaceSplit);
+            
+            do {
+                trkpt = ptIterator.next();
+                t = prevPartSplit + Math.round(factor * (trkpt.getTimestamp() - prevRaceSplit));
+                PublicResource.writeActivityDataPoint(sb, trkpt, t);
+                
+            } while (trkpt.getTimestamp() < next.getTrackPointId());
+            
+            prevPartSplit = next.getTimestamp();
+            prevRaceSplit = next.getTrackPointId();
+        }
+    }
 
 }

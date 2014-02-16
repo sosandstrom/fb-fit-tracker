@@ -1,0 +1,80 @@
+package com.wadpam.tracker.api;
+
+import com.google.appengine.repackaged.com.google.common.base.Strings;
+import com.google.inject.Inject;
+import com.wadpam.tracker.dao.DRaceDao;
+import com.wadpam.tracker.dao.DSplitDao;
+import com.wadpam.tracker.dao.DTrackPointDao;
+import com.wadpam.tracker.domain.DRace;
+import com.wadpam.tracker.domain.DSplit;
+import com.wadpam.tracker.domain.DTrackPoint;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ *
+ * @author osandstrom
+ */
+@Path("_adm")
+@Produces(MediaType.APPLICATION_JSON)
+public class AdminResource {
+    
+    static final Logger LOGGER = LoggerFactory.getLogger(AdminResource.class);
+    
+    @Inject
+    private HttpServletRequest request;
+    
+    @Inject
+    private DRaceDao raceDao;
+    
+    @Inject
+    private DSplitDao splitDao;
+    
+    @Inject
+    private DTrackPointDao trackPointDao;
+    
+    @POST
+    @Path("course/{raceId}/split")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createSplit(@PathParam("raceId") Long raceId,
+            CreateSplitRequest body) {
+        final Object raceKey = raceDao.getPrimaryKey(null, raceId);
+        long minTimestamp = (null != body.getElapsedSeconds() && 0 < body.getElapsedSeconds().length()) ?
+                Long.parseLong(body.getElapsedSeconds()) : 0L;
+        LOGGER.info("elapsedSeconds {} parses into {}", body.getElapsedSeconds(), minTimestamp);
+        Float lat = null, lon = null;
+        if (null != body.getLatLong() && 0 < body.getLatLong().length()) {
+            String[] ll = body.getLatLong().split(",");
+            if (2 == ll.length) {
+                lat = Float.valueOf(ll[0]);
+                lon = Float.valueOf(ll[1]);
+            }
+        }
+        DTrackPoint nearest = trackPointDao.findNearest(raceKey, minTimestamp, lat, lon);
+        DSplit split = splitDao.persist(raceKey, null, nearest.getElevation(), 
+                body.getName(), nearest.getPoint(), 
+                nearest.getTimestamp(), nearest.getId());
+        return Response.ok(split).build();
+    }
+    
+    @DELETE
+    @Path("course/{raceId}/split/{splitId}")
+    public Response deleteSplit(@PathParam("raceId") Long raceId,
+            @PathParam("splitId") Long splitId) {
+        final Object raceKey = raceDao.getPrimaryKey(null, raceId);
+        boolean found = splitDao.delete(raceKey, splitId);
+        return Response.status(found ? Status.OK : Status.NO_CONTENT).build();
+    }
+}

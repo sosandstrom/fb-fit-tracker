@@ -1,5 +1,8 @@
 package com.wadpam.tracker.dao;
 
+import com.wadpam.tracker.domain.DParticipant;
+import com.wadpam.tracker.domain.DSplit;
+import com.wadpam.tracker.domain.DTrackPoint;
 import java.io.InputStream;
 
 /**
@@ -12,6 +15,11 @@ import java.io.InputStream;
  */
 public interface DTrackPointDao extends GeneratedDTrackPointDao {
 
-	void parseGpx(InputStream bis);
+    void parseGpx(InputStream bis);
+
+    DTrackPoint findNearest(Object raceKey, long minTimestamp, Float lat, Float lon);
 	
+    void writeActivityDataPoints(StringBuilder sb, 
+            DParticipant participant, Iterable<DSplit> participantSplits, 
+            Object raceKey);
 }

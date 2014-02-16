@@ -6,16 +6,16 @@ import java.util.Collection;
 import java.util.List;
 import net.sf.mardao.core.CursorPage;
 import net.sf.mardao.core.dao.Dao;
-import com.wadpam.tracker.domain.DTrackPoint;
+import com.wadpam.tracker.domain.DSplit;
 import net.sf.mardao.core.geo.DLocation;
 
 /**
- * DAO interface with finder methods for DTrackPoint entities.
+ * DAO interface with finder methods for DSplit entities.
  *
  * Generated on 2014-02-14T21:06:54.803+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
-public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long> {
+public interface GeneratedDSplitDao extends Dao<DSplit, java.lang.Long> {
 
 	/** Column name for primary key attribute is "id" */
 	static final String COLUMN_NAME_ID = "id";
@@ -30,10 +30,14 @@ public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long
 	static final String COLUMN_NAME_CREATEDDATE = "createdDate";
 	/** Column name for field elevation is "elevation" */
 	static final String COLUMN_NAME_ELEVATION = "elevation";
+	/** Column name for field name is "name" */
+	static final String COLUMN_NAME_NAME = "name";
 	/** Column name for field point is "point" */
 	static final String COLUMN_NAME_POINT = "point";
 	/** Column name for field timestamp is "timestamp" */
 	static final String COLUMN_NAME_TIMESTAMP = "timestamp";
+	/** Column name for field trackPointId is "trackPointId" */
+	static final String COLUMN_NAME_TRACKPOINTID = "trackPointId";
 	/** Column name for field updatedBy is "updatedBy" */
 	static final String COLUMN_NAME_UPDATEDBY = "updatedBy";
 	/** Column name for field updatedDate is "updatedDate" */
@@ -43,16 +47,20 @@ public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long
 	static final List<String> COLUMN_NAMES = Arrays.asList(		COLUMN_NAME_CREATEDBY,
 		COLUMN_NAME_CREATEDDATE,
 		COLUMN_NAME_ELEVATION,
+		COLUMN_NAME_NAME,
 		COLUMN_NAME_POINT,
 		COLUMN_NAME_TIMESTAMP,
+		COLUMN_NAME_TRACKPOINTID,
 		COLUMN_NAME_UPDATEDBY,
 		COLUMN_NAME_UPDATEDDATE);
 	/** The list of Basic attribute names */
 	static final List<String> BASIC_NAMES = Arrays.asList(		COLUMN_NAME_CREATEDBY,
 		COLUMN_NAME_CREATEDDATE,
 		COLUMN_NAME_ELEVATION,
+		COLUMN_NAME_NAME,
 		COLUMN_NAME_POINT,
 		COLUMN_NAME_TIMESTAMP,
+		COLUMN_NAME_TRACKPOINTID,
 		COLUMN_NAME_UPDATEDBY,
 		COLUMN_NAME_UPDATEDDATE);
 	/** The list of attribute names */
@@ -63,14 +71,14 @@ public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long
 	/**
 	 * query-by method for parent field raceKey
 	 * @param raceKey the specified attribute
-	 * @return an Iterable of DTrackPoints with the specified parent
+	 * @return an Iterable of DSplits with the specified parent
 	 */
-	Iterable<DTrackPoint> queryByRaceKey(Object raceKey);
+	Iterable<DSplit> queryByRaceKey(Object raceKey);
 		
 	/**
 	 * query-keys-by method for parent field raceKey
 	 * @param raceKey the specified attribute
-	 * @return an Iterable of DTrackPoints with the specified parent
+	 * @return an Iterable of DSplits with the specified parent
 	 */
 	Iterable<java.lang.Long> queryKeysByRaceKey(Object raceKey);
 
@@ -79,23 +87,23 @@ public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long
 	 * @param raceKey the specified attribute
          * @param pageSize the number of domain entities in the page
          * @param cursorString non-null if get next page
-	 * @return a Page of DTrackPoints for the specified raceKey (parent)
+	 * @return a Page of DSplits for the specified raceKey (parent)
 	 */
-	CursorPage<DTrackPoint> queryPageByRaceKey(java.lang.Object raceKey,
+	CursorPage<DSplit> queryPageByRaceKey(java.lang.Object raceKey,
             int pageSize, String cursorString);
 
 	// ----------------------- field finders -------------------------------
 	/**
 	 * query-by method for field createdBy
 	 * @param createdBy the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified createdBy
+	 * @return an Iterable of DSplits for the specified createdBy
 	 */
-	Iterable<DTrackPoint> queryByCreatedBy(java.lang.String createdBy);
+	Iterable<DSplit> queryByCreatedBy(java.lang.String createdBy);
 		
 	/**
 	 * query-keys-by method for field createdBy
 	 * @param createdBy the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified createdBy
+	 * @return an Iterable of DSplits for the specified createdBy
 	 */
 	Iterable<java.lang.Long> queryKeysByCreatedBy(java.lang.String createdBy);
 
@@ -104,23 +112,23 @@ public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long
 	 * @param createdBy the specified attribute
          * @param pageSize the number of domain entities in the page
          * @param cursorString non-null if get next page
-	 * @return a Page of DTrackPoints for the specified createdBy
+	 * @return a Page of DSplits for the specified createdBy
 	 */
-	CursorPage<DTrackPoint> queryPageByCreatedBy(java.lang.String createdBy,
+	CursorPage<DSplit> queryPageByCreatedBy(java.lang.String createdBy,
             int pageSize, String cursorString);
 
 
 	/**
 	 * query-by method for field createdDate
 	 * @param createdDate the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified createdDate
+	 * @return an Iterable of DSplits for the specified createdDate
 	 */
-	Iterable<DTrackPoint> queryByCreatedDate(java.util.Date createdDate);
+	Iterable<DSplit> queryByCreatedDate(java.util.Date createdDate);
 		
 	/**
 	 * query-keys-by method for field createdDate
 	 * @param createdDate the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified createdDate
+	 * @return an Iterable of DSplits for the specified createdDate
 	 */
 	Iterable<java.lang.Long> queryKeysByCreatedDate(java.util.Date createdDate);
 
@@ -129,23 +137,23 @@ public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long
 	 * @param createdDate the specified attribute
          * @param pageSize the number of domain entities in the page
          * @param cursorString non-null if get next page
-	 * @return a Page of DTrackPoints for the specified createdDate
+	 * @return a Page of DSplits for the specified createdDate
 	 */
-	CursorPage<DTrackPoint> queryPageByCreatedDate(java.util.Date createdDate,
+	CursorPage<DSplit> queryPageByCreatedDate(java.util.Date createdDate,
             int pageSize, String cursorString);
 
 
 	/**
 	 * query-by method for field elevation
 	 * @param elevation the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified elevation
+	 * @return an Iterable of DSplits for the specified elevation
 	 */
-	Iterable<DTrackPoint> queryByElevation(java.lang.Float elevation);
+	Iterable<DSplit> queryByElevation(java.lang.Float elevation);
 		
 	/**
 	 * query-keys-by method for field elevation
 	 * @param elevation the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified elevation
+	 * @return an Iterable of DSplits for the specified elevation
 	 */
 	Iterable<java.lang.Long> queryKeysByElevation(java.lang.Float elevation);
 
@@ -154,23 +162,48 @@ public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long
 	 * @param elevation the specified attribute
          * @param pageSize the number of domain entities in the page
          * @param cursorString non-null if get next page
-	 * @return a Page of DTrackPoints for the specified elevation
+	 * @return a Page of DSplits for the specified elevation
 	 */
-	CursorPage<DTrackPoint> queryPageByElevation(java.lang.Float elevation,
+	CursorPage<DSplit> queryPageByElevation(java.lang.Float elevation,
+            int pageSize, String cursorString);
+
+
+	/**
+	 * query-by method for field name
+	 * @param name the specified attribute
+	 * @return an Iterable of DSplits for the specified name
+	 */
+	Iterable<DSplit> queryByName(java.lang.String name);
+		
+	/**
+	 * query-keys-by method for field name
+	 * @param name the specified attribute
+	 * @return an Iterable of DSplits for the specified name
+	 */
+	Iterable<java.lang.Long> queryKeysByName(java.lang.String name);
+
+	/**
+	 * query-page-by method for field name
+	 * @param name the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DSplits for the specified name
+	 */
+	CursorPage<DSplit> queryPageByName(java.lang.String name,
             int pageSize, String cursorString);
 
 
 	/**
 	 * query-by method for field point
 	 * @param point the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified point
+	 * @return an Iterable of DSplits for the specified point
 	 */
-	Iterable<DTrackPoint> queryByPoint(net.sf.mardao.core.geo.DLocation point);
+	Iterable<DSplit> queryByPoint(net.sf.mardao.core.geo.DLocation point);
 		
 	/**
 	 * query-keys-by method for field point
 	 * @param point the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified point
+	 * @return an Iterable of DSplits for the specified point
 	 */
 	Iterable<java.lang.Long> queryKeysByPoint(net.sf.mardao.core.geo.DLocation point);
 
@@ -179,23 +212,23 @@ public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long
 	 * @param point the specified attribute
          * @param pageSize the number of domain entities in the page
          * @param cursorString non-null if get next page
-	 * @return a Page of DTrackPoints for the specified point
+	 * @return a Page of DSplits for the specified point
 	 */
-	CursorPage<DTrackPoint> queryPageByPoint(net.sf.mardao.core.geo.DLocation point,
+	CursorPage<DSplit> queryPageByPoint(net.sf.mardao.core.geo.DLocation point,
             int pageSize, String cursorString);
 
 
 	/**
 	 * query-by method for field timestamp
 	 * @param timestamp the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified timestamp
+	 * @return an Iterable of DSplits for the specified timestamp
 	 */
-	Iterable<DTrackPoint> queryByTimestamp(java.lang.Long timestamp);
+	Iterable<DSplit> queryByTimestamp(java.lang.Long timestamp);
 		
 	/**
 	 * query-keys-by method for field timestamp
 	 * @param timestamp the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified timestamp
+	 * @return an Iterable of DSplits for the specified timestamp
 	 */
 	Iterable<java.lang.Long> queryKeysByTimestamp(java.lang.Long timestamp);
 
@@ -204,23 +237,48 @@ public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long
 	 * @param timestamp the specified attribute
          * @param pageSize the number of domain entities in the page
          * @param cursorString non-null if get next page
-	 * @return a Page of DTrackPoints for the specified timestamp
+	 * @return a Page of DSplits for the specified timestamp
 	 */
-	CursorPage<DTrackPoint> queryPageByTimestamp(java.lang.Long timestamp,
+	CursorPage<DSplit> queryPageByTimestamp(java.lang.Long timestamp,
+            int pageSize, String cursorString);
+
+
+	/**
+	 * query-by method for field trackPointId
+	 * @param trackPointId the specified attribute
+	 * @return an Iterable of DSplits for the specified trackPointId
+	 */
+	Iterable<DSplit> queryByTrackPointId(java.lang.Long trackPointId);
+		
+	/**
+	 * query-keys-by method for field trackPointId
+	 * @param trackPointId the specified attribute
+	 * @return an Iterable of DSplits for the specified trackPointId
+	 */
+	Iterable<java.lang.Long> queryKeysByTrackPointId(java.lang.Long trackPointId);
+
+	/**
+	 * query-page-by method for field trackPointId
+	 * @param trackPointId the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DSplits for the specified trackPointId
+	 */
+	CursorPage<DSplit> queryPageByTrackPointId(java.lang.Long trackPointId,
             int pageSize, String cursorString);
 
 
 	/**
 	 * query-by method for field updatedBy
 	 * @param updatedBy the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified updatedBy
+	 * @return an Iterable of DSplits for the specified updatedBy
 	 */
-	Iterable<DTrackPoint> queryByUpdatedBy(java.lang.String updatedBy);
+	Iterable<DSplit> queryByUpdatedBy(java.lang.String updatedBy);
 		
 	/**
 	 * query-keys-by method for field updatedBy
 	 * @param updatedBy the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified updatedBy
+	 * @return an Iterable of DSplits for the specified updatedBy
 	 */
 	Iterable<java.lang.Long> queryKeysByUpdatedBy(java.lang.String updatedBy);
 
@@ -229,23 +287,23 @@ public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long
 	 * @param updatedBy the specified attribute
          * @param pageSize the number of domain entities in the page
          * @param cursorString non-null if get next page
-	 * @return a Page of DTrackPoints for the specified updatedBy
+	 * @return a Page of DSplits for the specified updatedBy
 	 */
-	CursorPage<DTrackPoint> queryPageByUpdatedBy(java.lang.String updatedBy,
+	CursorPage<DSplit> queryPageByUpdatedBy(java.lang.String updatedBy,
             int pageSize, String cursorString);
 
 
 	/**
 	 * query-by method for field updatedDate
 	 * @param updatedDate the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified updatedDate
+	 * @return an Iterable of DSplits for the specified updatedDate
 	 */
-	Iterable<DTrackPoint> queryByUpdatedDate(java.util.Date updatedDate);
+	Iterable<DSplit> queryByUpdatedDate(java.util.Date updatedDate);
 		
 	/**
 	 * query-keys-by method for field updatedDate
 	 * @param updatedDate the specified attribute
-	 * @return an Iterable of DTrackPoints for the specified updatedDate
+	 * @return an Iterable of DSplits for the specified updatedDate
 	 */
 	Iterable<java.lang.Long> queryKeysByUpdatedDate(java.util.Date updatedDate);
 
@@ -254,9 +312,9 @@ public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long
 	 * @param updatedDate the specified attribute
          * @param pageSize the number of domain entities in the page
          * @param cursorString non-null if get next page
-	 * @return a Page of DTrackPoints for the specified updatedDate
+	 * @return a Page of DSplits for the specified updatedDate
 	 */
-	CursorPage<DTrackPoint> queryPageByUpdatedDate(java.util.Date updatedDate,
+	CursorPage<DSplit> queryPageByUpdatedDate(java.util.Date updatedDate,
             int pageSize, String cursorString);
 
 
@@ -275,10 +333,12 @@ public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long
 	/**
 	 * Persist an entity given all attributes
 	 */
-	DTrackPoint persist(Object raceKey,  	
+	DSplit persist(Object raceKey,  	
 		java.lang.Long id, 
 		java.lang.Float elevation, 
+		java.lang.String name, 
 		net.sf.mardao.core.geo.DLocation point, 
-		java.lang.Long timestamp);	
+		java.lang.Long timestamp, 
+		java.lang.Long trackPointId);	
 
 }

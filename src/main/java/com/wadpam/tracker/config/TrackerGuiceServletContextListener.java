@@ -16,6 +16,8 @@ import com.wadpam.tracker.dao.DParticipantDao;
 import com.wadpam.tracker.dao.DParticipantDaoBean;
 import com.wadpam.tracker.dao.DRaceDao;
 import com.wadpam.tracker.dao.DRaceDaoBean;
+import com.wadpam.tracker.dao.DSplitDao;
+import com.wadpam.tracker.dao.DSplitDaoBean;
 import com.wadpam.tracker.dao.DTrackPointDao;
 import com.wadpam.tracker.dao.DTrackPointDaoBean;
 
@@ -35,8 +37,9 @@ public class TrackerGuiceServletContextListener extends GuiceServletContextListe
       new JerseyServletModule() {
 
         private final void bindDaos() {
-          bind(DRaceDao.class).to(DRaceDaoBean.class);
           bind(DParticipantDao.class).to(DParticipantDaoBean.class);
+          bind(DRaceDao.class).to(DRaceDaoBean.class);
+          bind(DSplitDao.class).to(DSplitDaoBean.class);
           bind(DTrackPointDao.class).to(DTrackPointDaoBean.class);
         }
 

@@ -14,13 +14,18 @@ import net.sf.mardao.core.geo.DLocation;
  * Date: 1/24/14 Time: 6:40 PM
  */
 @Entity
-public class DTrackPoint extends AbstractLongEntity {
+public class DSplit extends AbstractLongEntity {
 
   @Parent(kind="DRace")
   private Object raceKey;
+  
+  @Basic
+  private String name;
     
   @Basic
-  //@GeoLocation
+  private Long trackPointId;
+  
+  @Basic
   private DLocation point;
 
   @Basic
@@ -35,6 +40,14 @@ public class DTrackPoint extends AbstractLongEntity {
 
     public void setRaceKey(Object raceKey) {
         this.raceKey = raceKey;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public DLocation getPoint() {
@@ -59,6 +72,14 @@ public class DTrackPoint extends AbstractLongEntity {
 
     public void setElevation(Float elevation) {
         this.elevation = elevation;
+    }
+
+    public Long getTrackPointId() {
+        return trackPointId;
+    }
+
+    public void setTrackPointId(Long trackPointId) {
+        this.trackPointId = trackPointId;
     }
 
 }

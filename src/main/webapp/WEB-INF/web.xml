@@ -9,35 +9,38 @@
     </filter>
     <filter-mapping>
         <filter-name>guice</filter-name>
+        <url-pattern>/_adm/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>guice</filter-name>
         <url-pattern>/api/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>guice</filter-name>
         <url-pattern>/oauth/*</url-pattern>
     </filter-mapping>
-    <!--
     <filter-mapping>
         <filter-name>guice</filter-name>
-        <url-pattern>/nosec/*</url-pattern>
+        <url-pattern>/pub/*</url-pattern>
     </filter-mapping>
-    -->
+
     <servlet>
         <servlet-name>UploadServlet</servlet-name>
         <servlet-class>com.wadpam.tracker.api.UploadServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UploadServlet</servlet-name>
-        <url-pattern>/nosec/*</url-pattern>
+        <url-pattern>/_admin/UploadServlet/*</url-pattern>
     </servlet-mapping>
-    <!--
+    
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>admin</web-resource-name>
-            <url-pattern>/_ah/*</url-pattern>
+            <url-pattern>/_a*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>admin</role-name>
         </auth-constraint>
     </security-constraint>
-    -->
+    
 </web-app>
