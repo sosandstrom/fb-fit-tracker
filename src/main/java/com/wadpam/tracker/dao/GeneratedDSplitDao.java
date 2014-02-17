@@ -12,7 +12,7 @@ import net.sf.mardao.core.geo.DLocation;
 /**
  * DAO interface with finder methods for DSplit entities.
  *
- * Generated on 2014-02-14T21:06:54.803+0100.
+ * Generated on 2014-02-17T10:18:57.703+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public interface GeneratedDSplitDao extends Dao<DSplit, java.lang.Long> {
@@ -327,6 +327,22 @@ public interface GeneratedDSplitDao extends Dao<DSplit, java.lang.Long> {
 
 	// ----------------------- uniqueFields finders -------------------------
 	
+	/**
+	 * find-by method for unique fields [name, raceKey]
+	 * @param name the specified name
+	 * @param raceKey the specified raceKey
+	 * @return the unique DSplit for the specified fields
+	 */
+	DSplit findByNameRaceKey(java.lang.String name, java.lang.Object raceKey);
+
+	/**
+	 * find-by method for unique fields [raceKey, timestamp]
+	 * @param raceKey the specified raceKey
+	 * @param timestamp the specified timestamp
+	 * @return the unique DSplit for the specified fields
+	 */
+	DSplit findByRaceKeyTimestamp(java.lang.Object raceKey, java.lang.Long timestamp);
+
 	
 	// ----------------------- populate / persist method -------------------------
 

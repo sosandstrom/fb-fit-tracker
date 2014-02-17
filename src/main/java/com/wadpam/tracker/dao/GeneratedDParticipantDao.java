@@ -12,7 +12,7 @@ import net.sf.mardao.core.geo.DLocation;
 /**
  * DAO interface with finder methods for DParticipant entities.
  *
- * Generated on 2014-02-14T21:06:54.803+0100.
+ * Generated on 2014-02-17T10:18:57.703+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Long> {
@@ -231,7 +231,7 @@ public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Lo
 	// ----------------------- uniqueFields finders -------------------------
 	
 	/**
-	 * find-by method for unique fields
+	 * find-by method for unique fields [raceId, userId]
 	 * @param raceId the specified raceId
 	 * @param userId the specified userId
 	 * @return the unique DParticipant for the specified fields

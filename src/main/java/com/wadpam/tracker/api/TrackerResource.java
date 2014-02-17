@@ -52,14 +52,16 @@ public class TrackerResource {
     
     @GET
     public Response createFitnessRun(@QueryParam("raceId") Long raceId) {
-        String courseKeyString = Long.toHexString(System.currentTimeMillis());
-        String courseUrl = "https://broker-web.appspot.com/public/course/" + courseKeyString;
+        Long userId = OAuth2Filter.getUserId(request);
+        DParticipant participant = participantDao.persist(null, raceId, userId);
+        final Object participantKey = participantDao.getPrimaryKey(participant);
+        String participantKeyString = participantDao.getKeyString(participantKey);
+        String courseUrl = "https://broker-web.appspot.com/public/course/" + participantKeyString;
                 // createCourse(APP_ID, 0.0);
         
         String actionId = createFitnessRun(courseUrl, APP_ID);
-        Long userId = OAuth2Filter.getUserId(request);
-        DParticipant participant = participantDao.persist(actionId, raceId, userId);
-        
+        participant.setActionId(actionId);
+        participantDao.update(participant);
         return Response.ok(participant).build();
     }
 

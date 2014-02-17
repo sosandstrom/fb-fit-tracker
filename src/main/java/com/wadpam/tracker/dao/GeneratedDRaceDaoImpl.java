@@ -20,7 +20,7 @@ import com.wadpam.tracker.domain.DRace;
 /**
  * The DRace domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2014-02-14T21:06:54.803+0100.
+ * Generated on 2014-02-17T10:18:57.703+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long> 

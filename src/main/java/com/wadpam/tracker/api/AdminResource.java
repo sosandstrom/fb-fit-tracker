@@ -2,9 +2,11 @@ package com.wadpam.tracker.api;
 
 import com.google.appengine.repackaged.com.google.common.base.Strings;
 import com.google.inject.Inject;
+import com.wadpam.tracker.dao.DParticipantDao;
 import com.wadpam.tracker.dao.DRaceDao;
 import com.wadpam.tracker.dao.DSplitDao;
 import com.wadpam.tracker.dao.DTrackPointDao;
+import com.wadpam.tracker.domain.DParticipant;
 import com.wadpam.tracker.domain.DRace;
 import com.wadpam.tracker.domain.DSplit;
 import com.wadpam.tracker.domain.DTrackPoint;
@@ -37,6 +39,9 @@ public class AdminResource {
     private HttpServletRequest request;
     
     @Inject
+    private DParticipantDao participantDao;
+    
+    @Inject
     private DRaceDao raceDao;
     
     @Inject
@@ -48,7 +53,7 @@ public class AdminResource {
     @POST
     @Path("course/{raceId}/split")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createSplit(@PathParam("raceId") Long raceId,
+    public Response createCourseSplit(@PathParam("raceId") Long raceId,
             CreateSplitRequest body) {
         final Object raceKey = raceDao.getPrimaryKey(null, raceId);
         long minTimestamp = (null != body.getElapsedSeconds() && 0 < body.getElapsedSeconds().length()) ?
@@ -66,6 +71,23 @@ public class AdminResource {
         DSplit split = splitDao.persist(raceKey, null, nearest.getElevation(), 
                 body.getName(), nearest.getPoint(), 
                 nearest.getTimestamp(), nearest.getId());
+        return Response.ok(split).build();
+    }
+    
+    @POST
+    @Path("participant/{participantId}/split")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createParticipantSplit(@PathParam("participantId") Long participantId,
+            CreateSplitRequest body) {
+        final Object participantKey = participantDao.getPrimaryKey(null, participantId);
+        final DParticipant participant = participantDao.findByPrimaryKey(participantKey);
+        final Object raceKey = raceDao.getPrimaryKey(null, participant.getRaceId());
+        long timestamp = Long.parseLong(body.getElapsedSeconds());
+
+        DSplit courseSplit = splitDao.findByNameRaceKey(body.getName(), raceKey);
+        DSplit split = splitDao.persist(participantKey, null, courseSplit.getElevation(), 
+                body.getName(), courseSplit.getPoint(), 
+                timestamp, courseSplit.getTimestamp());
         return Response.ok(split).build();
     }
     

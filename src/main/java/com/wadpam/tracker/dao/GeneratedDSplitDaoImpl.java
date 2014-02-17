@@ -20,7 +20,7 @@ import com.wadpam.tracker.domain.DSplit;
 /**
  * The DSplit domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2014-02-14T21:06:54.803+0100.
+ * Generated on 2014-02-17T10:18:57.703+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDSplitDaoImpl extends TypeDaoImpl<DSplit, java.lang.Long> 
@@ -652,6 +652,32 @@ public class GeneratedDSplitDaoImpl extends TypeDaoImpl<DSplit, java.lang.Long>
 	// ----------------------- many-to-many finders -------------------------
 
 	// ----------------------- uniqueFields finders -------------------------
+	/**
+	 * find-by method for unique attributes
+	 * @param name the specified name
+	 * @param raceKey the specified raceKey
+	 * @return the unique DSplit for the specified fields
+	 */
+	public final DSplit findByNameRaceKey(java.lang.String name, java.lang.Object raceKey) {
+		final Filter[] filters = new Filter[2];
+                int i = 0;
+                filters[i++] = createEqualsFilter(COLUMN_NAME_NAME, name);
+                filters[i++] = createEqualsFilter(COLUMN_NAME_RACEKEY, raceKey);
+		return findUniqueBy(filters);
+	}
+	/**
+	 * find-by method for unique attributes
+	 * @param raceKey the specified raceKey
+	 * @param timestamp the specified timestamp
+	 * @return the unique DSplit for the specified fields
+	 */
+	public final DSplit findByRaceKeyTimestamp(java.lang.Object raceKey, java.lang.Long timestamp) {
+		final Filter[] filters = new Filter[2];
+                int i = 0;
+                filters[i++] = createEqualsFilter(COLUMN_NAME_RACEKEY, raceKey);
+                filters[i++] = createEqualsFilter(COLUMN_NAME_TIMESTAMP, timestamp);
+		return findUniqueBy(filters);
+	}
 
 	// ----------------------- populate / persist method -------------------------
 
@@ -672,6 +698,11 @@ public class GeneratedDSplitDaoImpl extends TypeDaoImpl<DSplit, java.lang.Long>
                     domain = findByPrimaryKey(raceKey, id);
             }
 		
+            // use find-by unique column set
+            if (null == domain) {
+                domain = findByNameRaceKey(
+                    name,                     raceKey);
+            }
             // create new?
             if (null == domain) {
                     domain = new DSplit();

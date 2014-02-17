@@ -2,6 +2,8 @@ package com.wadpam.tracker.domain;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import net.sf.mardao.core.Parent;
 
 import net.sf.mardao.core.domain.AbstractLongEntity;
@@ -14,6 +16,8 @@ import net.sf.mardao.core.geo.DLocation;
  * Date: 1/24/14 Time: 6:40 PM
  */
 @Entity
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"raceKey", "name"}),
+    @UniqueConstraint(columnNames = {"raceKey", "timestamp"})})
 public class DSplit extends AbstractLongEntity {
 
   @Parent(kind="DRace")
