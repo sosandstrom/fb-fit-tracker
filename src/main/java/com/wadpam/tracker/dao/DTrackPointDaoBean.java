@@ -97,7 +97,7 @@ public class DTrackPointDaoBean
                 public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
                     //LOGGER.info("startElement {} qName {}", localName, qName);
                     if ("trk".equalsIgnoreCase(qName)) {
-                        DRace race = raceDao.persist(null, qName, null, null);
+                        DRace race = raceDao.persist(null, null, qName, null, null);
                         raceKey = raceDao.getPrimaryKey(race);
                     }
                     else if ("trkpt".equalsIgnoreCase(qName)) {
@@ -154,41 +154,4 @@ public class DTrackPointDaoBean
         }
     }
     
-    @Override
-    public void writeActivityDataPoints(StringBuilder sb, 
-            DParticipant participant, Iterable<DSplit> participantSplits, 
-            Object raceKey) {
-        
-        // find latest race timestamp (stored in trackPointId)
-        final TreeMap<Long, DSplit> splitMap = new TreeMap<Long, DSplit>();
-        for (DSplit split : participantSplits) {
-            splitMap.put(split.getTrackPointId(), split);
-        }
-        final long maxTimestamp = splitMap.lastKey();
-        
-        // iterate track points until timestamp
-        final Filter maxTimeFilter = new Filter(COLUMN_NAME_TIMESTAMP, Query.FilterOperator.LESS_THAN_OR_EQUAL, maxTimestamp);
-        Iterable<DTrackPoint> points = queryIterable(false, 0, -1, raceKey, null, COLUMN_NAME_TIMESTAMP, true, null, false, maxTimeFilter);
-        Iterator<DTrackPoint> ptIterator = points.iterator();
-        
-        long prevRaceSplit = 0L, prevPartSplit = 0L, t;
-        Collection<DSplit> i = splitMap.values();
-        DTrackPoint trkpt;
-        for (DSplit next : i) {
-            
-            // linear interpolation between splits
-            double factor = (next.getTimestamp() - prevPartSplit) / (next.getTrackPointId() - prevRaceSplit);
-            
-            do {
-                trkpt = ptIterator.next();
-                t = prevPartSplit + Math.round(factor * (trkpt.getTimestamp() - prevRaceSplit));
-                PublicResource.writeActivityDataPoint(sb, trkpt, t);
-                
-            } while (trkpt.getTimestamp() < next.getTrackPointId());
-            
-            prevPartSplit = next.getTimestamp();
-            prevRaceSplit = next.getTrackPointId();
-        }
-    }
-
 }

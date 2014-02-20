@@ -1,20 +1,16 @@
 package com.wadpam.tracker.api;
 
-import com.google.appengine.repackaged.com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.wadpam.tracker.dao.DParticipantDao;
 import com.wadpam.tracker.dao.DRaceDao;
 import com.wadpam.tracker.dao.DSplitDao;
 import com.wadpam.tracker.dao.DTrackPointDao;
 import com.wadpam.tracker.domain.DParticipant;
-import com.wadpam.tracker.domain.DRace;
 import com.wadpam.tracker.domain.DSplit;
-import com.wadpam.tracker.domain.DTrackPoint;
+import com.wadpam.tracker.domain.TrackPoint;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -22,6 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import net.sf.mardao.core.geo.DLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,10 +64,10 @@ public class AdminResource {
                 lon = Float.valueOf(ll[1]);
             }
         }
-        DTrackPoint nearest = trackPointDao.findNearest(raceKey, minTimestamp, lat, lon);
-        DSplit split = splitDao.persist(raceKey, null, nearest.getElevation(), 
-                body.getName(), nearest.getPoint(), 
-                nearest.getTimestamp(), nearest.getId());
+        TrackPoint nearest = raceDao.findNearest(raceKey, minTimestamp, lat, lon);
+        DSplit split = splitDao.persist(raceKey, null, nearest.getAlt(), 
+                body.getName(), new DLocation(nearest.getLat(), nearest.getLon()),
+                nearest.getT(), nearest.getT());
         return Response.ok(split).build();
     }
     

@@ -10,13 +10,27 @@ import com.wadpam.tracker.domain.DParticipant;
 import com.wadpam.tracker.domain.DRace;
 import com.wadpam.tracker.domain.DSplit;
 import com.wadpam.tracker.domain.DTrackPoint;
+import com.wadpam.tracker.domain.TrackPoint;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,19 +64,6 @@ public class PublicResource {
     @Path("course/{keyString}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getCourse(@PathParam("keyString") String participantKeyString) {
-        final StringBuilder sb = new StringBuilder()
-                .append("<html>\n")
-                .append("  <head prefix=\"og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# fitness: http://ogp.me/ns/fitness#\">\n");
-        
-        meta(sb, "fb:app_id", TrackerResource.APP_ID);
-        meta(sb, "og:type", "fitness.course");
-        meta(sb, "og:url", "https://broker-web.appspot.com/public/course/" + participantKeyString);
-        meta(sb, "og:title", "The Course Title");
-        meta(sb, "og:image", "https://s-static.ak.fbcdn.net/images/devsite/attachment_blank.png");
-        
-        meta(sb, "fitness:distance:value", "0");
-        meta(sb, "fitness:distance:units", "km");
-        
         // for participant splits, queryByParent is by queryByRaceKey():
         final Object participantKey = participantDao.getPrimaryKey(participantKeyString);
         final DParticipant participant = participantDao.findByPrimaryKey(participantKey);
@@ -70,8 +71,23 @@ public class PublicResource {
         
         // get the race splits via race id:
         final Object raceKey = raceDao.getPrimaryKey(null, participant.getRaceId());
+        final DRace race = raceDao.findByPrimaryKey(raceKey);
+        final Iterable<DSplit> raceSplits = splitDao.queryByRaceKey(raceKey);
         
-        trackPointDao.writeActivityDataPoints(sb, participant, participantSplits, raceKey);
+        final StringBuilder sb = new StringBuilder()
+                .append("<html>\n")
+                .append("  <head prefix=\"og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# fitness: http://ogp.me/ns/fitness#\">\n");
+        
+        meta(sb, "fb:app_id", TrackerResource.APP_ID);
+        meta(sb, "og:type", "fitness.course");
+        meta(sb, "og:url", "https://broker-web.appspot.com/pub/course/" + participantKeyString);
+        meta(sb, "og:title", race.getDisplayName());
+        meta(sb, "og:image", "https://s-static.ak.fbcdn.net/images/devsite/attachment_blank.png");
+        
+//        meta(sb, "fitness:distance:value", "0");
+//        meta(sb, "fitness:distance:units", "km");
+        
+        writeActivityDataPoints(sb, participant, participantSplits, raceKey, race, raceSplits);
         
         sb.append("  </head><body>\n</body></html>\n");
         return sb.toString();
@@ -100,7 +116,42 @@ public class PublicResource {
         return Response.ok(races).build();
     }
 
-    public static void writeActivityDataPoint(StringBuilder sb, DTrackPoint trkpt, long t) {
+    public void writeActivityDataPoints(StringBuilder sb, 
+            DParticipant participant, Iterable<DSplit> participantSplits, 
+            Object raceKey, DRace race, Iterable<DSplit> raceSplits) {
+        
+        // find latest race timestamp (stored in trackPointId)
+        final TreeMap<Long, DSplit> splitMap = new TreeMap<Long, DSplit>();
+        for (DSplit split : participantSplits) {
+            splitMap.put(split.getTrackPointId(), split);
+        }
+        final long maxTimestamp = splitMap.isEmpty() ? 0L : splitMap.lastKey();
+        
+        // iterate track points until timestamp
+        List<TrackPoint> points = raceDao.getTrack(race.getBlobKey());
+        Iterator<TrackPoint> ptIterator = points.iterator();
+        
+        long prevRaceSplit = -1L, prevPartSplit = -1L, t;
+        Iterable<DSplit> i = splitMap.isEmpty() ? raceSplits : splitMap.values();
+        TrackPoint trkpt;
+        for (DSplit next : raceSplits) {
+            
+            // linear interpolation between splits
+            double factor = (next.getTimestamp() - prevPartSplit) / (next.getTrackPointId() - prevRaceSplit);
+            
+            do {
+                trkpt = ptIterator.next();
+                t = prevPartSplit + Math.round(factor * (trkpt.getT() - prevRaceSplit));
+                PublicResource.writeActivityDataPoint(sb, trkpt, t);
+                
+            } while (trkpt.getT() < next.getTrackPointId());
+            
+            prevPartSplit = next.getTimestamp();
+            prevRaceSplit = next.getTrackPointId();
+        }
+    }
+
+    public static void writeActivityDataPoint(StringBuilder sb, TrackPoint trkpt, long t) {
 //        <meta property="fitness:metrics:location:latitude"  content="37.416382" />
 //        <meta property="fitness:metrics:location:longitude" content="-122.152659" />
 //        <meta property="fitness:metrics:location:altitude"  content="42" />
@@ -113,11 +164,45 @@ public class PublicResource {
 //        <meta property="fitness:metrics:custom_quantity:value" content="0" />
 //        <meta property="fitness:metrics:custom_quantity:units" content="SOME_UNIT_URL" />
 
-        meta(sb, "fitness:metrics:location:latitude", Float.toString(trkpt.getPoint().getLatitude()));
-        meta(sb, "fitness:metrics:location:longitude", Float.toString(trkpt.getPoint().getLongitude()));
-        meta(sb, "fitness:metrics:location:altitude", Float.toString(trkpt.getElevation()));
+        meta(sb, "fitness:metrics:location:latitude", Float.toString(trkpt.getLat()));
+        meta(sb, "fitness:metrics:location:longitude", Float.toString(trkpt.getLon()));
+        meta(sb, "fitness:metrics:location:altitude", Float.toString(trkpt.getAlt()));
         meta(sb, "fitness:metrics:timestamp", DTrackPointDaoBean.SDF.format(new Date(t)));
+        meta(sb, "fitness:metrics:distance:value", Float.toString(trkpt.getD()/1000.0f));
+        meta(sb, "fitness:metrics:distance:units", "km");
     }
     
+    @GET
+    @Path("img")
+    public Response redirectToCDN(@QueryParam("camId") String camId) throws URISyntaxException {
+        URI uri = new URI("https://legend-passbook.appspot.com/images/pass.se.bassac.stamps/storeCard/logo.png?uid=123&camId=" + camId);
+        
+        return Response.status(302).location(uri).build();
+    }
     
+    @GET
+    @Path("imgrecs")
+    @Produces("image/png")
+    public Response getImageWithCookie(@QueryParam("cookieValue") String cookieValue) throws IOException {
+        InputStream in = getClass().getResourceAsStream("/theBluePumpkin.png");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte b[] = new byte[1024];
+        int count;
+        while (0 < (count = in.read(b))) {
+            baos.write(b, 0, count);
+        }
+        in.close();
+        return Response.ok(baos.toByteArray(), "image/png")
+                .cookie(new NewCookie("pumpkin", cookieValue))
+                .build();
+    }
+    
+    @GET
+    @Path("imgclick")
+    public Response onImageClick(@CookieParam("pumpkin") String cookieValue) {
+        LOGGER.info("cookie pumpkin has value {}", cookieValue);
+        Map<String, String> body = new HashMap<String,String>();
+        body.put("pumpkin", cookieValue);
+        return Response.ok(body).build();
+    }
 }

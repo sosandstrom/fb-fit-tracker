@@ -12,7 +12,7 @@ import net.sf.mardao.core.geo.DLocation;
 /**
  * DAO interface with finder methods for DRace entities.
  *
- * Generated on 2014-02-17T10:18:57.703+0100.
+ * Generated on 2014-02-19T18:43:33.667+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
@@ -21,6 +21,8 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 	static final String COLUMN_NAME_ID = "id";
 
 
+	/** Column name for field blobKey is "blobKey" */
+	static final String COLUMN_NAME_BLOBKEY = "blobKey";
 	/** Column name for field createdBy is "createdBy" */
 	static final String COLUMN_NAME_CREATEDBY = "createdBy";
 	/** Column name for field createdDate is "createdDate" */
@@ -37,7 +39,8 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 	static final String COLUMN_NAME_UPDATEDDATE = "updatedDate";
 
 	/** The list of attribute names */
-	static final List<String> COLUMN_NAMES = Arrays.asList(		COLUMN_NAME_CREATEDBY,
+	static final List<String> COLUMN_NAMES = Arrays.asList(		COLUMN_NAME_BLOBKEY,
+		COLUMN_NAME_CREATEDBY,
 		COLUMN_NAME_CREATEDDATE,
 		COLUMN_NAME_DISPLAYNAME,
 		COLUMN_NAME_EXTRACTORCLASSNAME,
@@ -45,7 +48,8 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 		COLUMN_NAME_UPDATEDBY,
 		COLUMN_NAME_UPDATEDDATE);
 	/** The list of Basic attribute names */
-	static final List<String> BASIC_NAMES = Arrays.asList(		COLUMN_NAME_CREATEDBY,
+	static final List<String> BASIC_NAMES = Arrays.asList(		COLUMN_NAME_BLOBKEY,
+		COLUMN_NAME_CREATEDBY,
 		COLUMN_NAME_CREATEDDATE,
 		COLUMN_NAME_DISPLAYNAME,
 		COLUMN_NAME_EXTRACTORCLASSNAME,
@@ -57,6 +61,31 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 
 
 	// ----------------------- field finders -------------------------------
+	/**
+	 * query-by method for field blobKey
+	 * @param blobKey the specified attribute
+	 * @return an Iterable of DRaces for the specified blobKey
+	 */
+	Iterable<DRace> queryByBlobKey(com.google.appengine.api.blobstore.BlobKey blobKey);
+		
+	/**
+	 * query-keys-by method for field blobKey
+	 * @param blobKey the specified attribute
+	 * @return an Iterable of DRaces for the specified blobKey
+	 */
+	Iterable<java.lang.Long> queryKeysByBlobKey(com.google.appengine.api.blobstore.BlobKey blobKey);
+
+	/**
+	 * query-page-by method for field blobKey
+	 * @param blobKey the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DRaces for the specified blobKey
+	 */
+	CursorPage<DRace> queryPageByBlobKey(com.google.appengine.api.blobstore.BlobKey blobKey,
+            int pageSize, String cursorString);
+
+
 	/**
 	 * query-by method for field createdBy
 	 * @param createdBy the specified attribute
@@ -248,6 +277,7 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 	 * Persist an entity given all attributes
 	 */
 	DRace persist(		java.lang.Long id, 
+		com.google.appengine.api.blobstore.BlobKey blobKey, 
 		java.lang.String displayName, 
 		java.lang.String extractorClassname, 
 		java.lang.String queryUrl);	

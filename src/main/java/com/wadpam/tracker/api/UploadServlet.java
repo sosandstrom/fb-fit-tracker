@@ -8,17 +8,14 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreInputStream;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.common.collect.ImmutableMap;
-import com.google.inject.Inject;
 import com.wadpam.mardao.social.NetworkTemplate;
 import static com.wadpam.tracker.api.PublicResource.LOGGER;
 import com.wadpam.tracker.dao.DRaceDao;
 import com.wadpam.tracker.dao.DRaceDaoBean;
 import com.wadpam.tracker.dao.DTrackPointDao;
 import com.wadpam.tracker.dao.DTrackPointDaoBean;
+import com.wadpam.tracker.domain.DRace;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -58,16 +55,18 @@ public class UploadServlet extends HttpServlet {
         if (req.getRequestURI().endsWith("callback")) {
             BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
             Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
+            DRace race = null;
             for (BlobKey blobKey : blobs.get("gpxFile")) {
                 LOGGER.info("uploaded {}", blobKey.getKeyString());
 
                 // schedule task for 10 minutes Blob processing:
-                Queue defQ = QueueFactory.getDefaultQueue();
-                defQ.add(TaskOptions.Builder.withUrl("/_admin/UploadServlet/parse").param(NAME_BLOBKEY, blobKey.getKeyString()));
+                // Queue defQ = QueueFactory.getDefaultQueue();
+                // defQ.add(TaskOptions.Builder.withUrl("/_admin/UploadServlet/parse").param(NAME_BLOBKEY, blobKey.getKeyString()));
+                race = raceDao.persist(null, blobKey, "Race", null, null);
             }
             resp.setContentType(MediaType.APPLICATION_JSON);
             final OutputStream out = resp.getOutputStream();
-            NetworkTemplate.MAPPER.writeValue(out, blobs);
+            NetworkTemplate.MAPPER.writeValue(out, race);
         }
         else if (null != req.getParameter(NAME_BLOBKEY)) {
             // parse GPX file from blobstore:

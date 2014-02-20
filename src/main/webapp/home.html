@@ -3,11 +3,14 @@
         <title>Home</title>
     </head>
     <body>
-        <a href="/api/tracker?raceId=1">Create Fitness run</a>
+        <form method="GET" action="/api/tracker" onsubmit="return enroll();">
+            <select id="raceId" name="raceId"></select>
+            <input type="submit" value="Enter Race" />
+        </form>
         <table>
             <thead>
                 <tr>
-                    <th>raceId</th><th>fitness actionId</th>
+                    <th>raceId</th><th>fitness actionId</th><th>Edit</th>
                 </tr>
             </thead>
             <tbody id="racesBody"></tbody>
@@ -15,15 +18,39 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="/js/crud_api.js"></script>
         <script type="text/javascript">
+function loadMyRaces() {
+    $("#racesBody").html("");
+    crud_Read("api/participant", "me")
+    .done(function(data, statusText, jqXHR) {
+        $.each(data, function(index, item) {
+            $("#racesBody").append("<tr><td>" +
+                item.raceId + "</td><td>" + item.actionId + 
+                "</td><td><a href='splits.html?raceId=" + item.raceId + 
+                "&participantId=" + item.id + "'>" + item.actionId + 
+                "</a></td></tr>");
+        });
+    });
+}
+    
+function enroll() {
+    crud_Read("api", "tracker?raceId=" + $("#raceId").val())
+    .done(function(data, statusText, jqXHR) {
+        loadMyRaces();
+    });
+
+    return false;
+}            
                             $(function() {
-                                crud_Read("api/participant", "me")
+                                crud_Read("pub", "course")
                                 .done(function(data, statusText, jqXHR) {
                                     $.each(data, function(index, item) {
-                                        $("#racesBody").append("<tr><td>" +
-                                            item.raceId + "</td><td>" + item.actionId + 
-                                            "</td></tr>");
+                                        $("#raceId").append('<option value="' +
+                                            item.id + '">' + item.displayName + 
+                                            '</option>');
                                     });
                                 });
+                                
+                                loadMyRaces();
                             });
         </script>
     </body>

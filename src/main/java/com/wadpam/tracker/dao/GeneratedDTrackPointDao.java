@@ -12,7 +12,7 @@ import net.sf.mardao.core.geo.DLocation;
 /**
  * DAO interface with finder methods for DTrackPoint entities.
  *
- * Generated on 2014-02-17T10:18:57.703+0100.
+ * Generated on 2014-02-19T18:43:33.667+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public interface GeneratedDTrackPointDao extends Dao<DTrackPoint, java.lang.Long> {

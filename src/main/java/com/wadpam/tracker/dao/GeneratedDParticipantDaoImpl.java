@@ -20,7 +20,7 @@ import com.wadpam.tracker.domain.DParticipant;
 /**
  * The DParticipant domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2014-02-17T10:18:57.703+0100.
+ * Generated on 2014-02-19T18:43:33.667+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDParticipantDaoImpl extends TypeDaoImpl<DParticipant, java.lang.Long> 
@@ -532,11 +532,6 @@ public class GeneratedDParticipantDaoImpl extends TypeDaoImpl<DParticipant, java
                     domain = findByPrimaryKey(id);
             }
 		
-            // use find-by unique column set
-            if (null == domain) {
-                domain = findByRaceIdUserId(
-                    raceId,                     userId);
-            }
             // create new?
             if (null == domain) {
                     domain = new DParticipant();

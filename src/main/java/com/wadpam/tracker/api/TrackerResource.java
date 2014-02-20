@@ -7,6 +7,7 @@ import com.wadpam.mardao.oauth.web.OAuth2Filter;
 import com.wadpam.mardao.social.NetworkTemplate;
 import com.wadpam.tracker.dao.DParticipantDao;
 import com.wadpam.tracker.dao.DRaceDao;
+import com.wadpam.tracker.dao.DRaceDaoBean;
 import com.wadpam.tracker.domain.DParticipant;
 import com.wadpam.tracker.opengraph.FitnessCourse;
 import com.wadpam.tracker.opengraph.FitnessRuns;
@@ -14,10 +15,10 @@ import com.wadpam.tracker.opengraph.RequestObject;
 import com.wadpam.tracker.opengraph.StandardObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -53,10 +54,10 @@ public class TrackerResource {
     @GET
     public Response createFitnessRun(@QueryParam("raceId") Long raceId) {
         Long userId = OAuth2Filter.getUserId(request);
-        DParticipant participant = participantDao.persist(null, raceId, userId);
+        DParticipant participant = participantDao.persist(null, null, raceId, userId);
         final Object participantKey = participantDao.getPrimaryKey(participant);
         String participantKeyString = participantDao.getKeyString(participantKey);
-        String courseUrl = "https://broker-web.appspot.com/public/course/" + participantKeyString;
+        String courseUrl = "https://broker-web.appspot.com/pub/course/" + participantKeyString;
                 // createCourse(APP_ID, 0.0);
         
         String actionId = createFitnessRun(courseUrl, APP_ID);
@@ -78,10 +79,7 @@ public class TrackerResource {
     }
 
     private String createFitnessRun(String courseUrl, String appId) {
-//        StringBuilder sb = new StringBuilder();
-//        
-//        append(sb, OAuth2Filter.NAME_ACCESS_TOKEN, getAccessToken());
-//        append(sb, "course", courseUrl);
+        final Date now = new Date();
 
         FitnessRuns run = new FitnessRuns();
         run.setApp_id(appId);
@@ -91,7 +89,7 @@ public class TrackerResource {
         Map<String,String> response = postStandardObject("/me/fitness.runs", run,
                 ImmutableMap.builder().put("course", courseUrl)
                 .put("no_feed_story", "true")
-                .put("start_time", "2014-02-02T13:32")
+                .put("start_time", DRaceDaoBean.SDF.format(now))
                 .put("expires_in", "3660")
                 .put("live_text", "Send me cheers along the way by liking or commenting on this post.")
                 .put("privacy", "{\"value\":\"SELF\"}")

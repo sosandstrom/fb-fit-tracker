@@ -20,7 +20,7 @@ import com.wadpam.tracker.domain.DRace;
 /**
  * The DRace domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2014-02-17T10:18:57.703+0100.
+ * Generated on 2014-02-19T18:43:33.667+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long> 
@@ -69,6 +69,9 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
             value = domain.getId();
         }
         // fields
+        else if (COLUMN_NAME_BLOBKEY.equals(name)) {
+            value = domain.getBlobKey();
+        }
         else if (COLUMN_NAME_CREATEDBY.equals(name)) {
             value = domain.getCreatedBy();
         }
@@ -112,6 +115,9 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
             clazz = java.lang.Long.class;
         }
         // fields
+        else if (COLUMN_NAME_BLOBKEY.equals(name)) {
+            clazz = com.google.appengine.api.blobstore.BlobKey.class;
+        }
         else if (COLUMN_NAME_CREATEDBY.equals(name)) {
             clazz = java.lang.String.class;
         }
@@ -150,6 +156,9 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
             domain.setId((java.lang.Long) value);
         }
         // fields
+        else if (COLUMN_NAME_BLOBKEY.equals(name)) {
+            domain.setBlobKey((com.google.appengine.api.blobstore.BlobKey) value);
+        }
         else if (COLUMN_NAME_CREATEDBY.equals(name)) {
             domain.setCreatedBy((java.lang.String) value);
         }
@@ -283,6 +292,38 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
         }
 
 	// ----------------------- field finders -------------------------------
+	/**
+         * {@inheritDoc}
+	 */
+	public final Iterable<DRace> queryByBlobKey(com.google.appengine.api.blobstore.BlobKey blobKey) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_BLOBKEY, blobKey);
+            return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
+	}
+	
+	/**
+	 * query-key-by method for attribute field blobKey
+	 * @param blobKey the specified attribute
+	 * @return an Iterable of keys to the DRaces with the specified attribute
+	 */
+	public final Iterable<java.lang.Long> queryKeysByBlobKey(com.google.appengine.api.blobstore.BlobKey blobKey) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_BLOBKEY, blobKey);
+            return queryIterableKeys(0, -1, null, null, null, false, null, false, filter);
+	}
+
+	/**
+	 * query-page-by method for field blobKey
+	 * @param blobKey the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DRaces for the specified blobKey
+	 */
+	public final CursorPage<DRace> queryPageByBlobKey(com.google.appengine.api.blobstore.BlobKey blobKey,
+            int pageSize, String cursorString) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_BLOBKEY, blobKey);
+            return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
+        }
+
+	 
 	/**
          * {@inheritDoc}
 	 */
@@ -521,6 +562,7 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	 * Persist an entity given all attributes
 	 */
 	public DRace persist(		java.lang.Long id, 
+		com.google.appengine.api.blobstore.BlobKey blobKey, 
 		java.lang.String displayName, 
 		java.lang.String extractorClassname, 
 		java.lang.String queryUrl) {
@@ -539,6 +581,7 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
                             domain.setId(id);
                     }
                     // fields
+                    domain.setBlobKey(blobKey);
                     domain.setDisplayName(displayName);
                     domain.setExtractorClassname(extractorClassname);
                     domain.setQueryUrl(queryUrl);

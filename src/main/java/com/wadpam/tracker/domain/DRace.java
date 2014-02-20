@@ -1,5 +1,6 @@
 package com.wadpam.tracker.domain;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 
@@ -15,13 +16,24 @@ import net.sf.mardao.core.domain.AbstractLongEntity;
 public class DRace extends AbstractLongEntity {
 
   @Basic
+  private BlobKey blobKey;
+    
+  @Basic
   private String displayName;
+
+  @Basic
+  private String extractorClassname;
 
   @Basic
   private String queryUrl;
 
-  @Basic
-  private String extractorClassname;
+    public BlobKey getBlobKey() {
+        return blobKey;
+    }
+
+    public void setBlobKey(BlobKey blobKey) {
+        this.blobKey = blobKey;
+    }
 
   public String getDisplayName() {
     return displayName;
