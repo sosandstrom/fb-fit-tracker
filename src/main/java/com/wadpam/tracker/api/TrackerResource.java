@@ -52,76 +52,12 @@ public class TrackerResource {
     }
     
     @GET
-    public Response createFitnessRun(@QueryParam("raceId") Long raceId) {
+    public Response registerParticipant(@QueryParam("raceId") Long raceId) {
         Long userId = OAuth2Filter.getUserId(request);
         DParticipant participant = participantDao.persist(null, null, raceId, userId);
-        final Object participantKey = participantDao.getPrimaryKey(participant);
-        String participantKeyString = participantDao.getKeyString(participantKey);
-        String courseUrl = "https://broker-web.appspot.com/pub/course/" + participantKeyString;
-                // createCourse(APP_ID, 0.0);
-        
-        String actionId = createFitnessRun(courseUrl, APP_ID);
-        participant.setActionId(actionId);
-        participantDao.update(participant);
         return Response.ok(participant).build();
     }
 
-    private String createCourse(String appId, double distance) {
-        FitnessCourse course = new FitnessCourse();
-        course.setApp_id(appId);
-        course.setTitle("Long run started.");
-        Map<String,String> response = postStandardObject("/me/objects/fitness.course", course,
-                ImmutableMap.of("fitness%3Ametrics%3Alocation%3Alatitude", 55.3f,
-                "fitness%3Ametrics%3Alocation%3Alongitude", 15.3f,
-                "fitness%3Ametrics%3Adistance%3Avalue", 30.2f,
-                "fitness%3Ametrics%3Adistance%3Aunits", "km"));
-        return "https://graph.facebook.com/me/objects/fitness.course/" + response.get("id");
-    }
-
-    private String createFitnessRun(String courseUrl, String appId) {
-        final Date now = new Date();
-
-        FitnessRuns run = new FitnessRuns();
-        run.setApp_id(appId);
-        run.setTitle("Heading out for a Long run");
-        run.setCourse(courseUrl);
-        
-        Map<String,String> response = postStandardObject("/me/fitness.runs", run,
-                ImmutableMap.builder().put("course", courseUrl)
-                .put("no_feed_story", "true")
-                .put("start_time", DRaceDaoBean.SDF.format(now))
-                .put("expires_in", "3660")
-                .put("live_text", "Send me cheers along the way by liking or commenting on this post.")
-                .put("privacy", "{\"value\":\"SELF\"}")
-                .build());
-        return response.get("id");
-    }
-
-    private void appendActivityDataPoints(StringBuilder sb, double distance) {
-        
-    }
-
-    private void appendStandardProperties(StringBuilder sb, String appId) {
-        append(sb, "fb:app_id", appId);
-        append(sb, "og:type", "fitness.course");
-        append(sb, "og:url", "https://broker-web.appspot.com/courses/start.html");
-        append(sb, "og:title", "Sample Course");
-        append(sb, "og:image", "https://s-static.ak.fbcdn.net/images/devsite/attachment_blank.png");
-        append(sb, "og:description", "Some description");
-    }
-
-    private void appendOtherProperties(StringBuilder sb) {
-        append(sb, "fitness:distance:units", "km");
-        append(sb, "fitness:distance:value", "12.84");
-        append(sb, "fitness:duration:units", "min");
-        append(sb, "fitness:duration:value", "23.45");
-        append(sb, "fitness:metrics:location:latitude", "55.34916");
-        append(sb, "fitness:metrics:location:longitude", "12.57098");
-        append(sb, "fitness:metrics:location:altitude", "12");
-        append(sb, "fitness:metrics:timestamp", "2014-01-31T20:25");
-        
-    }
-    
     public static void append(Map<String,Object> map, String property, String content) {
         map.put(property, content);
     }
@@ -142,16 +78,17 @@ public class TrackerResource {
         return (String) request.getAttribute(OAuth2Filter.NAME_ACCESS_TOKEN);
     }
 
-    private Map<String, String> postStandardObject(String path, StandardObject course, Map... extras) {
+    public static Map<String, String> postStandardObject(String path, String accessToken, 
+            StandardObject course, Map... extras) {
         RequestObject request = new RequestObject();
-        request.setAccess_token(getAccessToken());
+        request.setAccess_token(accessToken);
         try {
             request.setObject(NetworkTemplate.MAPPER.writeValueAsString(course));
         } catch (JsonProcessingException ex) {
             LOGGER.error("Converting StandardObject", ex);
         }
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("access_token", getAccessToken());
+        params.put("access_token", accessToken);
         params.put("object", request.getObject());
         if (null != extras && 0 < extras.length) {
             params.putAll(extras[0]);

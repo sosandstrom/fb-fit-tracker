@@ -12,6 +12,8 @@ public class CreateSplitRequest {
     private String elapsedSeconds;
     private String latLong;
     private String name;
+    private Long raceSplitId;
+    private Float distance;
 
     public String getElapsedSeconds() {
         return elapsedSeconds;
@@ -35,5 +37,21 @@ public class CreateSplitRequest {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getRaceSplitId() {
+        return raceSplitId;
+    }
+
+    public void setRaceSplitId(Long raceSplitId) {
+        this.raceSplitId = raceSplitId;
+    }
+
+    public Float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Float distance) {
+        this.distance = distance;
     }
 }

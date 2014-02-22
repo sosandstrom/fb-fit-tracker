@@ -20,7 +20,7 @@ import com.wadpam.tracker.domain.DSplit;
 /**
  * The DSplit domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2014-02-19T18:43:33.667+0100.
+ * Generated on 2014-02-22T07:59:31.216+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDSplitDaoImpl extends TypeDaoImpl<DSplit, java.lang.Long> 
@@ -79,6 +79,9 @@ public class GeneratedDSplitDaoImpl extends TypeDaoImpl<DSplit, java.lang.Long>
         else if (COLUMN_NAME_CREATEDDATE.equals(name)) {
             value = domain.getCreatedDate();
         }
+        else if (COLUMN_NAME_DISTANCE.equals(name)) {
+            value = domain.getDistance();
+        }
         else if (COLUMN_NAME_ELEVATION.equals(name)) {
             value = domain.getElevation();
         }
@@ -132,6 +135,9 @@ public class GeneratedDSplitDaoImpl extends TypeDaoImpl<DSplit, java.lang.Long>
         else if (COLUMN_NAME_CREATEDDATE.equals(name)) {
             clazz = java.util.Date.class;
         }
+        else if (COLUMN_NAME_DISTANCE.equals(name)) {
+            clazz = java.lang.Float.class;
+        }
         else if (COLUMN_NAME_ELEVATION.equals(name)) {
             clazz = java.lang.Float.class;
         }
@@ -179,6 +185,9 @@ public class GeneratedDSplitDaoImpl extends TypeDaoImpl<DSplit, java.lang.Long>
         }
         else if (COLUMN_NAME_CREATEDDATE.equals(name)) {
             domain.setCreatedDate((java.util.Date) value);
+        }
+        else if (COLUMN_NAME_DISTANCE.equals(name)) {
+            domain.setDistance((java.lang.Float) value);
         }
         else if (COLUMN_NAME_ELEVATION.equals(name)) {
             domain.setElevation((java.lang.Float) value);
@@ -417,6 +426,38 @@ public class GeneratedDSplitDaoImpl extends TypeDaoImpl<DSplit, java.lang.Long>
 	public final CursorPage<DSplit> queryPageByCreatedDate(java.util.Date createdDate,
             int pageSize, String cursorString) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_CREATEDDATE, createdDate);
+            return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
+        }
+
+	 
+	/**
+         * {@inheritDoc}
+	 */
+	public final Iterable<DSplit> queryByDistance(java.lang.Float distance) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_DISTANCE, distance);
+            return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
+	}
+	
+	/**
+	 * query-key-by method for attribute field distance
+	 * @param distance the specified attribute
+	 * @return an Iterable of keys to the DSplits with the specified attribute
+	 */
+	public final Iterable<java.lang.Long> queryKeysByDistance(java.lang.Float distance) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_DISTANCE, distance);
+            return queryIterableKeys(0, -1, null, null, null, false, null, false, filter);
+	}
+
+	/**
+	 * query-page-by method for field distance
+	 * @param distance the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DSplits for the specified distance
+	 */
+	public final CursorPage<DSplit> queryPageByDistance(java.lang.Float distance,
+            int pageSize, String cursorString) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_DISTANCE, distance);
             return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
         }
 
@@ -686,6 +727,7 @@ public class GeneratedDSplitDaoImpl extends TypeDaoImpl<DSplit, java.lang.Long>
 	 */
 	public DSplit persist(Object raceKey,  	
 		java.lang.Long id, 
+		java.lang.Float distance, 
 		java.lang.Float elevation, 
 		java.lang.String name, 
 		net.sf.mardao.core.geo.DLocation point, 
@@ -708,6 +750,7 @@ public class GeneratedDSplitDaoImpl extends TypeDaoImpl<DSplit, java.lang.Long>
                             domain.setId(id);
                     }
                     // fields
+                    domain.setDistance(distance);
                     domain.setElevation(elevation);
                     domain.setName(name);
                     domain.setPoint(point);

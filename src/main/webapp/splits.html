@@ -19,7 +19,7 @@
         <table>
             <thead>
                 <tr>
-                    <th>id</th><th>Name</th><th>Elapsed seconds</th><th>Delete</th>
+                    <th>id</th><th>Name</th><th>Distance (m)</th><th>Elapsed seconds</th><th>Delete</th>
                 </tr>
             </thead>
             <tbody id="splitsBody"></tbody>
@@ -33,7 +33,7 @@ function createSplit() {
     var participantId = getParameterByName("participantId");
     crud_Create("/_adm/participant/" + participantId + "/split", {
         elapsedSeconds: $("#elapsedSeconds").val(),
-        name: $("#splitName").val()
+        raceSplitId: $("#splitName").val()
     })
     .done(function(data, statusText, jqXHR) {
         loadSplits();
@@ -49,15 +49,18 @@ function deleteSplit(splitId) {
 
 function loadSplits() {
     $("#splitsBody").html("");
+    var participantId = getParameterByName("participantId");
     var raceId = getParameterByName("raceId");
-    crud_Read("/pub/course/" + raceId, "split")
+    crud_Read("/api/participant/" + participantId, "split")
     .done(function(data, statusText, jqXHR) {
-        $.each(data, function(index, item) {
+        $.each(data.items, function(index, item) {
             $("#splitsBody").append(
                 '<tr><td>' +
                 item.id +
                 '</td><td>' +
                 item.name +
+                '</td><td>' +
+                item.distance +
                 '</td><td>' +
                 item.timestamp +
                 '</td><td>' +
@@ -76,7 +79,7 @@ function loadRaceSplits() {
         $.each(data, function(index, item) {
             $("#splitName").append(
                 '<option value="' +
-                item.name +
+                item.id +
                 '">' +
                 item.name +
                 '</option>'
@@ -87,6 +90,7 @@ function loadRaceSplits() {
 
 $(function() {
    loadRaceSplits(); 
+   loadSplits();
 });
         </script>
     </body>

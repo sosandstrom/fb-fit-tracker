@@ -12,7 +12,7 @@ import net.sf.mardao.core.geo.DLocation;
 /**
  * DAO interface with finder methods for DSplit entities.
  *
- * Generated on 2014-02-19T18:43:33.667+0100.
+ * Generated on 2014-02-22T07:59:31.216+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public interface GeneratedDSplitDao extends Dao<DSplit, java.lang.Long> {
@@ -28,6 +28,8 @@ public interface GeneratedDSplitDao extends Dao<DSplit, java.lang.Long> {
 	static final String COLUMN_NAME_CREATEDBY = "createdBy";
 	/** Column name for field createdDate is "createdDate" */
 	static final String COLUMN_NAME_CREATEDDATE = "createdDate";
+	/** Column name for field distance is "distance" */
+	static final String COLUMN_NAME_DISTANCE = "distance";
 	/** Column name for field elevation is "elevation" */
 	static final String COLUMN_NAME_ELEVATION = "elevation";
 	/** Column name for field name is "name" */
@@ -46,6 +48,7 @@ public interface GeneratedDSplitDao extends Dao<DSplit, java.lang.Long> {
 	/** The list of attribute names */
 	static final List<String> COLUMN_NAMES = Arrays.asList(		COLUMN_NAME_CREATEDBY,
 		COLUMN_NAME_CREATEDDATE,
+		COLUMN_NAME_DISTANCE,
 		COLUMN_NAME_ELEVATION,
 		COLUMN_NAME_NAME,
 		COLUMN_NAME_POINT,
@@ -56,6 +59,7 @@ public interface GeneratedDSplitDao extends Dao<DSplit, java.lang.Long> {
 	/** The list of Basic attribute names */
 	static final List<String> BASIC_NAMES = Arrays.asList(		COLUMN_NAME_CREATEDBY,
 		COLUMN_NAME_CREATEDDATE,
+		COLUMN_NAME_DISTANCE,
 		COLUMN_NAME_ELEVATION,
 		COLUMN_NAME_NAME,
 		COLUMN_NAME_POINT,
@@ -140,6 +144,31 @@ public interface GeneratedDSplitDao extends Dao<DSplit, java.lang.Long> {
 	 * @return a Page of DSplits for the specified createdDate
 	 */
 	CursorPage<DSplit> queryPageByCreatedDate(java.util.Date createdDate,
+            int pageSize, String cursorString);
+
+
+	/**
+	 * query-by method for field distance
+	 * @param distance the specified attribute
+	 * @return an Iterable of DSplits for the specified distance
+	 */
+	Iterable<DSplit> queryByDistance(java.lang.Float distance);
+		
+	/**
+	 * query-keys-by method for field distance
+	 * @param distance the specified attribute
+	 * @return an Iterable of DSplits for the specified distance
+	 */
+	Iterable<java.lang.Long> queryKeysByDistance(java.lang.Float distance);
+
+	/**
+	 * query-page-by method for field distance
+	 * @param distance the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DSplits for the specified distance
+	 */
+	CursorPage<DSplit> queryPageByDistance(java.lang.Float distance,
             int pageSize, String cursorString);
 
 
@@ -351,6 +380,7 @@ public interface GeneratedDSplitDao extends Dao<DSplit, java.lang.Long> {
 	 */
 	DSplit persist(Object raceKey,  	
 		java.lang.Long id, 
+		java.lang.Float distance, 
 		java.lang.Float elevation, 
 		java.lang.String name, 
 		net.sf.mardao.core.geo.DLocation point, 

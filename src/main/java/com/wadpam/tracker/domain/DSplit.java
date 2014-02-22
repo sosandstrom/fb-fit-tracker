@@ -38,6 +38,9 @@ public class DSplit extends AbstractLongEntity {
   @Basic
   private Float elevation;
 
+  @Basic
+  private Float distance;
+  
     public Object getRaceKey() {
         return raceKey;
     }
@@ -84,6 +87,14 @@ public class DSplit extends AbstractLongEntity {
 
     public void setTrackPointId(Long trackPointId) {
         this.trackPointId = trackPointId;
+    }
+
+    public Float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Float distance) {
+        this.distance = distance;
     }
 
 }

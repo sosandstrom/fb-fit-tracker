@@ -39,9 +39,6 @@ public class DTrackPointDaoBean
 	extends GeneratedDTrackPointDaoImpl
 		implements DTrackPointDao 
 {
-    /** 2014-01-25T09:01:35.000Z */
-    public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
-
     final DRaceDao raceDao;
 
     @Inject
@@ -90,7 +87,6 @@ public class DTrackPointDaoBean
 
                 @Override
                 public void startDocument() throws SAXException {
-                    SDF.setTimeZone(TimeZone.getTimeZone("GMT"));
                 }
                 
                 @Override
@@ -125,7 +121,7 @@ public class DTrackPointDaoBean
                     // there can be a time tag within <metadata>
                     else if ("time".equalsIgnoreCase(qName) && null != trkpt) {
                         try {
-                            Date t = SDF.parse(text.toString());
+                            Date t = DRaceDaoBean.SDF.parse(text.toString());
                             //LOG.info("time {} parsed into {}", text.toString(), t);
                             if (0l  == startTime) {
                                 startTime = t.getTime();

@@ -3,13 +3,12 @@ package com.wadpam.tracker.api;
 import com.google.inject.Inject;
 import com.wadpam.tracker.dao.DParticipantDao;
 import com.wadpam.tracker.dao.DRaceDao;
+import com.wadpam.tracker.dao.DRaceDaoBean;
 import com.wadpam.tracker.dao.DSplitDao;
 import com.wadpam.tracker.dao.DTrackPointDao;
-import com.wadpam.tracker.dao.DTrackPointDaoBean;
 import com.wadpam.tracker.domain.DParticipant;
 import com.wadpam.tracker.domain.DRace;
 import com.wadpam.tracker.domain.DSplit;
-import com.wadpam.tracker.domain.DTrackPoint;
 import com.wadpam.tracker.domain.TrackPoint;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -123,29 +122,45 @@ public class PublicResource {
         // find latest race timestamp (stored in trackPointId)
         final TreeMap<Long, DSplit> splitMap = new TreeMap<Long, DSplit>();
         for (DSplit split : participantSplits) {
-            splitMap.put(split.getTrackPointId(), split);
+            splitMap.put(split.getTimestamp(), split);
         }
         final long maxTimestamp = splitMap.isEmpty() ? 0L : splitMap.lastKey();
+        LOGGER.debug("maxTimestamp is {}, splits.size={}", maxTimestamp, splitMap.size());
         
         // iterate track points until timestamp
         List<TrackPoint> points = raceDao.getTrack(race.getBlobKey());
         Iterator<TrackPoint> ptIterator = points.iterator();
         
-        long prevRaceSplit = -1L, prevPartSplit = -1L, t;
+        long prevRaceSplit = 0L, prevPartSplit = 0L, t;
         Iterable<DSplit> i = splitMap.isEmpty() ? raceSplits : splitMap.values();
         TrackPoint trkpt;
-        for (DSplit next : raceSplits) {
+        for (DSplit next : i) {
+            LOGGER.debug("prevPartSplit={}, prevRaceSplit={}", prevPartSplit, prevRaceSplit);
+            LOGGER.debug("next.timestamp {}, course.timestamp {}", next.getTimestamp(), next.getTrackPointId());
             
             // linear interpolation between splits
-            double factor = (next.getTimestamp() - prevPartSplit) / (next.getTrackPointId() - prevRaceSplit);
+            double factor = ((double) (next.getTimestamp() - prevPartSplit)) / ((double) (next.getTrackPointId() - prevRaceSplit));
+            LOGGER.debug("factor for split {} is {}", next.getName(), factor);
             
+            boolean first = true;
             do {
                 trkpt = ptIterator.next();
                 t = prevPartSplit + Math.round(factor * (trkpt.getT() - prevRaceSplit));
+                if (first) {
+                    first = false;
+                    LOGGER.debug("prevPartSplit is {}, step is {}", prevPartSplit, (trkpt.getT() - prevRaceSplit));
+                }
                 PublicResource.writeActivityDataPoint(sb, trkpt, t);
+                if (maxTimestamp <= t) break;
                 
             } while (trkpt.getT() < next.getTrackPointId());
-            
+            LOGGER.debug("At split, t is {}, trkpt.T is {}", t, trkpt.getT());
+
+            // tag split metrics with distance 
+            sb.append("<!-- distance at ").append(next.getName()).append(" -->\n");
+            meta(sb, "fitness:metrics:distance:value", Float.toString(next.getDistance()/1000.0f));
+            meta(sb, "fitness:metrics:distance:units", "km");
+
             prevPartSplit = next.getTimestamp();
             prevRaceSplit = next.getTrackPointId();
         }
@@ -167,9 +182,7 @@ public class PublicResource {
         meta(sb, "fitness:metrics:location:latitude", Float.toString(trkpt.getLat()));
         meta(sb, "fitness:metrics:location:longitude", Float.toString(trkpt.getLon()));
         meta(sb, "fitness:metrics:location:altitude", Float.toString(trkpt.getAlt()));
-        meta(sb, "fitness:metrics:timestamp", DTrackPointDaoBean.SDF.format(new Date(t)));
-        meta(sb, "fitness:metrics:distance:value", Float.toString(trkpt.getD()/1000.0f));
-        meta(sb, "fitness:metrics:distance:units", "km");
+        meta(sb, "fitness:metrics:timestamp", DRaceDaoBean.SDF.format(new Date(t)));
     }
     
     @GET
