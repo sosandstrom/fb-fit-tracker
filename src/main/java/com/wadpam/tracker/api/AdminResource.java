@@ -2,9 +2,11 @@ package com.wadpam.tracker.api;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.wadpam.mardao.oauth.dao.DConnectionDao;
 import com.wadpam.mardao.oauth.dao.DOAuth2UserDao;
+import com.wadpam.mardao.social.NetworkTemplate;
 import static com.wadpam.tracker.api.TrackerResource.APP_ID;
 import com.wadpam.tracker.dao.DParticipantDao;
 import com.wadpam.tracker.dao.DRaceDao;
@@ -16,8 +18,14 @@ import com.wadpam.tracker.domain.DRace;
 import com.wadpam.tracker.domain.DSplit;
 import com.wadpam.tracker.domain.TrackPoint;
 import com.wadpam.tracker.opengraph.FitnessRuns;
+import com.wadpam.tracker.opengraph.StandardObject;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -127,12 +135,14 @@ public class AdminResource {
         final String accessToken = connectionDao.getAccessToken(userKey, DConnectionDao.PROVIDER_ID_FACEBOOK);
         
         if (null != accessToken) {
+
+            // stuff needed to create fitness run:
+            final Object splitKey = splitDao.getPrimaryKey(split);
+            final String splitKeyString = splitDao.getKeyString(splitKey);
+            String courseUrl = "https://broker-web.appspot.com/pub/course/" + splitKeyString;
+            
             if (null == participant.getActionId()) {
                 
-                // stuff needed to create fitness run:
-                final Object participantKey = participantDao.getPrimaryKey(participant);
-                String participantKeyString = participantDao.getKeyString(participantKey);
-                String courseUrl = "https://broker-web.appspot.com/pub/course/" + participantKeyString;
                 final DRace race = raceDao.findByPrimaryKey(null, participant.getRaceId());
 
                 String actionId = createFitnessRun(courseUrl, APP_ID, accessToken,
@@ -141,7 +151,10 @@ public class AdminResource {
                 participantDao.update(participant);
             }
             else {
-                
+                // update fitness run
+                updateFitnessRun(participant.getActionId(), 
+                        courseUrl, 
+                        split, accessToken);
             }
         }
     }
@@ -154,9 +167,8 @@ public class AdminResource {
         run.setCourse(courseUrl);
         
         Map<String,String> response = TrackerResource.postStandardObject("/me/fitness.runs", 
-                accessToken, run,
+                accessToken, Map.class, run,
                 ImmutableMap.builder().put("course", courseUrl)
-                //.put("no_feed_story", "true")
                 .put("start_time", DRaceDaoBean.SDF.format(new Date(startTime)))
                 .put("expires_in", "28800") // 8h
                 .put("live_text", "Send me cheers along the way by liking or commenting on this post.")
@@ -165,4 +177,31 @@ public class AdminResource {
         return response.get("id");
     }
 
+    private Boolean updateFitnessRun(String actionId, String courseUrl, 
+            DSplit split, String accessToken) {
+
+        NetworkTemplate template = new NetworkTemplate();
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("method", "POST");
+        params.put("suppress_http_code", "1");
+        params.put("course", courseUrl);
+        params.put("access_token", accessToken);
+        
+        if (DSplitDao.NAME_FINISH.equals(split.getName())) {
+            params.put("end_time", DRaceDaoBean.SDF.format(new Date(split.getTimestamp())));
+        }
+        
+        return template.get("https://graph.facebook.com/" + actionId, 
+                Boolean.class, params);
+
+//        FitnessRuns run = new FitnessRuns();
+//        //run.setCourse(courseUrl);
+//        return TrackerResource.postStandardObject("/" + actionId, accessToken, 
+//                Boolean.class, run,
+//                ImmutableMap.builder()
+//                .put("course", courseUrl)
+//                //.put("no_feed_story", "true")
+//                .put("ref", splitName)
+//                .build());
+    }
 }

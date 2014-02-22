@@ -1,7 +1,5 @@
 package com.wadpam.tracker.opengraph;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  *
  * @author osandstrom

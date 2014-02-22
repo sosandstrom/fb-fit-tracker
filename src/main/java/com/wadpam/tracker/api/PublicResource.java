@@ -5,7 +5,6 @@ import com.wadpam.tracker.dao.DParticipantDao;
 import com.wadpam.tracker.dao.DRaceDao;
 import com.wadpam.tracker.dao.DRaceDaoBean;
 import com.wadpam.tracker.dao.DSplitDao;
-import com.wadpam.tracker.dao.DTrackPointDao;
 import com.wadpam.tracker.domain.DParticipant;
 import com.wadpam.tracker.domain.DRace;
 import com.wadpam.tracker.domain.DSplit;
@@ -56,15 +55,13 @@ public class PublicResource {
     @Inject
     private DSplitDao splitDao;
     
-    @Inject
-    private DTrackPointDao trackPointDao;
-    
     @GET
     @Path("course/{keyString}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getCourse(@PathParam("keyString") String participantKeyString) {
+    public String getCourse(@PathParam("keyString") String splitKeyString) {
         // for participant splits, queryByParent is by queryByRaceKey():
-        final Object participantKey = participantDao.getPrimaryKey(participantKeyString);
+        final Object splitKey = splitDao.getPrimaryKey(splitKeyString);
+        final Object participantKey = splitDao.getParentKeyByPrimaryKey(splitKey);
         final DParticipant participant = participantDao.findByPrimaryKey(participantKey);
         final Iterable<DSplit> participantSplits = splitDao.queryByRaceKey(participantKey);
         
@@ -79,12 +76,9 @@ public class PublicResource {
         
         meta(sb, "fb:app_id", TrackerResource.APP_ID);
         meta(sb, "og:type", "fitness.course");
-        meta(sb, "og:url", "https://broker-web.appspot.com/pub/course/" + participantKeyString);
+        meta(sb, "og:url", "https://broker-web.appspot.com/pub/course/" + splitKeyString);
         meta(sb, "og:title", race.getDisplayName());
         meta(sb, "og:image", "https://s-static.ak.fbcdn.net/images/devsite/attachment_blank.png");
-        
-//        meta(sb, "fitness:distance:value", "0");
-//        meta(sb, "fitness:distance:units", "km");
         
         writeActivityDataPoints(sb, participant, participantSplits, raceKey, race, raceSplits);
         
@@ -131,39 +125,60 @@ public class PublicResource {
         List<TrackPoint> points = raceDao.getTrack(race.getBlobKey());
         Iterator<TrackPoint> ptIterator = points.iterator();
         
-        long prevRaceSplit = 0L, prevPartSplit = 0L, t;
+        long prevRaceSplit = 0L, prevPartSplit = 0L, t = -1L, startTime = 0L;
         Iterable<DSplit> i = splitMap.isEmpty() ? raceSplits : splitMap.values();
         TrackPoint trkpt;
-        for (DSplit next : i) {
-            LOGGER.debug("prevPartSplit={}, prevRaceSplit={}", prevPartSplit, prevRaceSplit);
+        boolean beforeStart = true;
+        DSplit next = null;
+        for (Iterator<DSplit> iterator = i.iterator(); iterator.hasNext(); ) {
+            next = iterator.next();
+            // LOGGER.debug("prevPartSplit={}, prevRaceSplit={}", prevPartSplit, prevRaceSplit);
             LOGGER.debug("next.timestamp {}, course.timestamp {}", next.getTimestamp(), next.getTrackPointId());
             
             // linear interpolation between splits
             double factor = ((double) (next.getTimestamp() - prevPartSplit)) / ((double) (next.getTrackPointId() - prevRaceSplit));
             LOGGER.debug("factor for split {} is {}", next.getName(), factor);
             
-            boolean first = true;
             do {
                 trkpt = ptIterator.next();
-                t = prevPartSplit + Math.round(factor * (trkpt.getT() - prevRaceSplit));
-                if (first) {
-                    first = false;
-                    LOGGER.debug("prevPartSplit is {}, step is {}", prevPartSplit, (trkpt.getT() - prevRaceSplit));
+                
+                // have we reached the start split?
+                if (beforeStart) {
+                    beforeStart = trkpt.getT() < next.getTrackPointId();
+                    startTime = next.getTimestamp();
                 }
-                PublicResource.writeActivityDataPoint(sb, trkpt, t);
-                if (maxTimestamp <= t) break;
+                
+                // only output if on or past start split
+                if (!beforeStart) {
+                    t = prevPartSplit + Math.round(factor * (trkpt.getT() - prevRaceSplit));
+                    PublicResource.writeActivityDataPoint(sb, trkpt, t);
+                    if (maxTimestamp <= t) break;
+                }
                 
             } while (trkpt.getT() < next.getTrackPointId());
             LOGGER.debug("At split, t is {}, trkpt.T is {}", t, trkpt.getT());
 
             // tag split metrics with distance 
-            sb.append("<!-- distance at ").append(next.getName()).append(" -->\n");
             meta(sb, "fitness:metrics:distance:value", Float.toString(next.getDistance()/1000.0f));
             meta(sb, "fitness:metrics:distance:units", "km");
 
+            // and add a split
+            meta(sb, "fitness:splits:values:value", Float.toString(next.getDistance()/1000.0f));
+            meta(sb, "fitness:splits:values:units", "km");
+            
             prevPartSplit = next.getTimestamp();
             prevRaceSplit = next.getTrackPointId();
         }
+        
+        // tag course with distance 
+        meta(sb, "fitness:distance:units", "km");
+        meta(sb, "fitness:distance:value", Float.toString(next.getDistance()/1000.0f));
+        // tag course with duration
+        meta(sb, "fitness:duration:units", "s");
+        meta(sb, "fitness:duration:value", Long.toString((prevPartSplit-startTime)/1000));
+        // tag course with pace
+        meta(sb, "fitness:pace:units", "s/m");
+        meta(sb, "fitness:pace:value", Float.toString(((prevPartSplit-startTime)/1000)/next.getDistance()));
     }
 
     public static void writeActivityDataPoint(StringBuilder sb, TrackPoint trkpt, long t) {

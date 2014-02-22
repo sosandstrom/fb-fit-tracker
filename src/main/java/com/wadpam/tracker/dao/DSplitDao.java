@@ -9,7 +9,7 @@ package com.wadpam.tracker.dao;
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public interface DSplitDao extends GeneratedDSplitDao {
-
-	// TODO: declare your Business Methods here
+    
+    static String NAME_FINISH = "Finish";
 	
 }

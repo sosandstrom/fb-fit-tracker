@@ -78,25 +78,26 @@ public class TrackerResource {
         return (String) request.getAttribute(OAuth2Filter.NAME_ACCESS_TOKEN);
     }
 
-    public static Map<String, String> postStandardObject(String path, String accessToken, 
-            StandardObject course, Map... extras) {
-        RequestObject request = new RequestObject();
-        request.setAccess_token(accessToken);
+    public static <R> R postStandardObject(String path, String accessToken, 
+            Class<R> responseClass,
+            StandardObject obj, Map... extras) {
+        
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("access_token", accessToken);
+        
         try {
-            request.setObject(NetworkTemplate.MAPPER.writeValueAsString(course));
+            params.put("object", NetworkTemplate.MAPPER.writeValueAsString(obj));
         } catch (JsonProcessingException ex) {
             LOGGER.error("Converting StandardObject", ex);
         }
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("access_token", accessToken);
-        params.put("object", request.getObject());
+
         if (null != extras && 0 < extras.length) {
             params.putAll(extras[0]);
         }
         
         NetworkTemplate template = new NetworkTemplate();
         Map<String, String> requestHeaders = ImmutableMap.of(NetworkTemplate.CONTENT_TYPE, NetworkTemplate.MIME_FORM);
-        Map<String,String> response = template.post("https://graph.facebook.com" + path, requestHeaders, params, Map.class);
+        R response = template.post("https://graph.facebook.com" + path, requestHeaders, params, responseClass);
         return response;
     }
 

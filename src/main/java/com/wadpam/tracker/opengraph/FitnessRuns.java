@@ -7,14 +7,10 @@ package com.wadpam.tracker.opengraph;
 public class FitnessRuns extends StandardObject {
     
     private String course;
-    private final String privacy = "{\"value\":\"SELF\"}";
-    private final String start_time = "2014-02-02T11:34";
-    private final int expires_in = 3600;
+    private String privacy;
+    private String start_time;
+    private Integer expires_in;
     
-    public FitnessRuns() {
-        //setType("fitness.runs");
-    }
-
     public String getCourse() {
         return course;
     }
@@ -31,7 +27,7 @@ public class FitnessRuns extends StandardObject {
         return start_time;
     }
 
-    public int getExpires_in() {
+    public Integer getExpires_in() {
         return expires_in;
     }
     
