@@ -18,8 +18,6 @@ import com.wadpam.tracker.dao.DRaceDao;
 import com.wadpam.tracker.dao.DRaceDaoBean;
 import com.wadpam.tracker.dao.DSplitDao;
 import com.wadpam.tracker.dao.DSplitDaoBean;
-import com.wadpam.tracker.dao.DTrackPointDao;
-import com.wadpam.tracker.dao.DTrackPointDaoBean;
 
 /**
  * Created with IntelliJ IDEA.
@@ -40,7 +38,6 @@ public class TrackerGuiceServletContextListener extends GuiceServletContextListe
           bind(DParticipantDao.class).to(DParticipantDaoBean.class);
           bind(DRaceDao.class).to(DRaceDaoBean.class);
           bind(DSplitDao.class).to(DSplitDaoBean.class);
-          bind(DTrackPointDao.class).to(DTrackPointDaoBean.class);
         }
 
         @Override

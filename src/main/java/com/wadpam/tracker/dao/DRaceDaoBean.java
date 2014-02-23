@@ -2,6 +2,7 @@ package com.wadpam.tracker.dao;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreInputStream;
+import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.wadpam.tracker.domain.DRace;
@@ -17,6 +18,7 @@ import java.util.TimeZone;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import net.sf.mardao.core.Filter;
 import net.sf.mardao.core.geo.Geobox;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -35,10 +37,12 @@ public class DRaceDaoBean
 		implements DRaceDao 
 {
     /** 2014-01-25T09:01:35.000Z */
-    public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-
-    static {
-        SDF.setTimeZone(TimeZone.getTimeZone("GMT"));
+    public static final SimpleDateFormat SDF = getDateFormat("GMT");
+    
+    public static SimpleDateFormat getDateFormat(String timeZone) {
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_FORMAT);
+        sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
+        return sdf;
     }
     
     @Override
@@ -171,4 +175,15 @@ public class DRaceDaoBean
         return null;
     }
 
+    @Override
+    public Iterable<Long> queryActive(Date now) {
+        Date inOneMinute = new Date(now.getTime() + 60*1000);
+        Date eightHoursAgo = new Date(now.getTime() - 8*60*60*1000);
+        final Filter notExpired = createGreaterThanOrEqualFilter(COLUMN_NAME_STARTDATE, eightHoursAgo);
+        final Filter hasStarted = new Filter(COLUMN_NAME_STARTDATE, Query.FilterOperator.LESS_THAN, inOneMinute);
+        return queryIterableKeys(0, -1, null, null, COLUMN_NAME_STARTDATE, true, 
+                null, false, hasStarted, notExpired);
+    }
+
+    
 }

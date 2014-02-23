@@ -2,7 +2,6 @@ package com.wadpam.tracker.api;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.wadpam.mardao.oauth.dao.DConnectionDao;
 import com.wadpam.mardao.oauth.dao.DOAuth2UserDao;
@@ -12,23 +11,21 @@ import com.wadpam.tracker.dao.DParticipantDao;
 import com.wadpam.tracker.dao.DRaceDao;
 import com.wadpam.tracker.dao.DRaceDaoBean;
 import com.wadpam.tracker.dao.DSplitDao;
-import com.wadpam.tracker.dao.DTrackPointDao;
 import com.wadpam.tracker.domain.DParticipant;
 import com.wadpam.tracker.domain.DRace;
 import com.wadpam.tracker.domain.DSplit;
 import com.wadpam.tracker.domain.TrackPoint;
+import com.wadpam.tracker.extractor.AbstractSplitsExtractor;
 import com.wadpam.tracker.opengraph.FitnessRuns;
-import com.wadpam.tracker.opengraph.StandardObject;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Collections;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -66,10 +63,18 @@ public class AdminResource {
     private DSplitDao splitDao;
     
     @Inject
-    private DTrackPointDao trackPointDao;
-    
-    @Inject
     private DOAuth2UserDao userDao;
+
+    @GET
+    @Path("cron/activeRaces")
+    public Response checkActiveRaces() {
+        final Date now = new Date();
+        Iterable<Long> races = raceDao.queryActive(now);
+        for (Long raceId : races) {
+            checkActiveRace(raceId);
+        }
+        return Response.ok(races).build();
+    }
     
     @POST
     @Path("course/{raceId}/split")
@@ -127,6 +132,30 @@ public class AdminResource {
         boolean found = splitDao.delete(raceKey, splitId);
         return Response.status(found ? Status.OK : Status.NO_CONTENT).build();
     }
+    
+    private void checkActiveRace(final Long raceId) {
+        final DRace race = raceDao.findByPrimaryKey(raceId);
+        LOGGER.info("Active race: {} url {}", race.getDisplayName(), race.getQueryUrl());
+        
+        if (null != race.getExtractorClassname()) {
+            try {
+                Class extractorClass = Class.forName(race.getExtractorClassname());
+                AbstractSplitsExtractor extractor = (AbstractSplitsExtractor) extractorClass.newInstance();
+                extractor.setAdminResource(this);
+                extractor.setParticipantDao(participantDao);
+                extractor.setRaceDao(raceDao);
+                extractor.setSplitDao(splitDao);
+                
+                extractor.process(race);
+            } catch (InstantiationException ex) {
+                LOGGER.error("Instantiating extractor", ex);
+            } catch (IllegalAccessException ex) {
+                LOGGER.error("Accessing extractor", ex);
+            } catch (ClassNotFoundException ex) {
+                LOGGER.error("Extractor", ex);
+            }
+        }
+    }
 
     private void upsertFitnessObject(DParticipant participant, DSplit split) {
         
@@ -151,6 +180,12 @@ public class AdminResource {
                 participantDao.update(participant);
             }
             else {
+                if (DSplitDao.NAME_FINISH.equals(split.getName())) {
+                    // remove extUserId to disable future checks
+                    participant.setExtUserId(null);
+                    participantDao.update(participant);
+                }        
+                
                 // update fitness run
                 updateFitnessRun(participant.getActionId(), 
                         courseUrl, 
@@ -193,15 +228,29 @@ public class AdminResource {
         
         return template.get("https://graph.facebook.com/" + actionId, 
                 Boolean.class, params);
+    }
 
-//        FitnessRuns run = new FitnessRuns();
-//        //run.setCourse(courseUrl);
-//        return TrackerResource.postStandardObject("/" + actionId, accessToken, 
-//                Boolean.class, run,
-//                ImmutableMap.builder()
-//                .put("course", courseUrl)
-//                //.put("no_feed_story", "true")
-//                .put("ref", splitName)
-//                .build());
+    @POST
+    @Path("course/{raceId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateCourse(@PathParam("raceId") Long raceId,
+        UpdateRaceRequest body) {
+        
+        DRace race = raceDao.findByPrimaryKey(raceId);
+        if (null == race) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
+        race.setDisplayName(body.getDisplayName());
+        race.setTimeZone(body.getTimeZone());
+        try {
+            SimpleDateFormat sdf = DRaceDaoBean.getDateFormat(body.getTimeZone());
+            race.setStartDate(sdf.parse(body.getStartTime()));
+        } catch (ParseException unixTimestamp) {
+            LOGGER.warn("Parsing {}", body.getStartTime());
+            race.setStartDate(new Date(Long.parseLong(body.getStartTime())));
+        }
+        raceDao.update(race);
+        
+        return Response.ok().build();
     }
 }

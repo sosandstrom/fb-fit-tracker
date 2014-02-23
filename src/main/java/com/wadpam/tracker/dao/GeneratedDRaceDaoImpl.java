@@ -20,7 +20,7 @@ import com.wadpam.tracker.domain.DRace;
 /**
  * The DRace domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2014-02-22T07:59:31.216+0100.
+ * Generated on 2014-02-23T20:33:00.895+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long> 
@@ -87,6 +87,12 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
         else if (COLUMN_NAME_QUERYURL.equals(name)) {
             value = domain.getQueryUrl();
         }
+        else if (COLUMN_NAME_STARTDATE.equals(name)) {
+            value = domain.getStartDate();
+        }
+        else if (COLUMN_NAME_TIMEZONE.equals(name)) {
+            value = domain.getTimeZone();
+        }
         else if (COLUMN_NAME_UPDATEDBY.equals(name)) {
             value = domain.getUpdatedBy();
         }
@@ -133,6 +139,12 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
         else if (COLUMN_NAME_QUERYURL.equals(name)) {
             clazz = java.lang.String.class;
         }
+        else if (COLUMN_NAME_STARTDATE.equals(name)) {
+            clazz = java.util.Date.class;
+        }
+        else if (COLUMN_NAME_TIMEZONE.equals(name)) {
+            clazz = java.lang.String.class;
+        }
         else if (COLUMN_NAME_UPDATEDBY.equals(name)) {
             clazz = java.lang.String.class;
         }
@@ -173,6 +185,12 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
         }
         else if (COLUMN_NAME_QUERYURL.equals(name)) {
             domain.setQueryUrl((java.lang.String) value);
+        }
+        else if (COLUMN_NAME_STARTDATE.equals(name)) {
+            domain.setStartDate((java.util.Date) value);
+        }
+        else if (COLUMN_NAME_TIMEZONE.equals(name)) {
+            domain.setTimeZone((java.lang.String) value);
         }
         else if (COLUMN_NAME_UPDATEDBY.equals(name)) {
             domain.setUpdatedBy((java.lang.String) value);
@@ -487,6 +505,70 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	/**
          * {@inheritDoc}
 	 */
+	public final Iterable<DRace> queryByStartDate(java.util.Date startDate) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_STARTDATE, startDate);
+            return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
+	}
+	
+	/**
+	 * query-key-by method for attribute field startDate
+	 * @param startDate the specified attribute
+	 * @return an Iterable of keys to the DRaces with the specified attribute
+	 */
+	public final Iterable<java.lang.Long> queryKeysByStartDate(java.util.Date startDate) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_STARTDATE, startDate);
+            return queryIterableKeys(0, -1, null, null, null, false, null, false, filter);
+	}
+
+	/**
+	 * query-page-by method for field startDate
+	 * @param startDate the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DRaces for the specified startDate
+	 */
+	public final CursorPage<DRace> queryPageByStartDate(java.util.Date startDate,
+            int pageSize, String cursorString) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_STARTDATE, startDate);
+            return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
+        }
+
+	 
+	/**
+         * {@inheritDoc}
+	 */
+	public final Iterable<DRace> queryByTimeZone(java.lang.String timeZone) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_TIMEZONE, timeZone);
+            return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
+	}
+	
+	/**
+	 * query-key-by method for attribute field timeZone
+	 * @param timeZone the specified attribute
+	 * @return an Iterable of keys to the DRaces with the specified attribute
+	 */
+	public final Iterable<java.lang.Long> queryKeysByTimeZone(java.lang.String timeZone) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_TIMEZONE, timeZone);
+            return queryIterableKeys(0, -1, null, null, null, false, null, false, filter);
+	}
+
+	/**
+	 * query-page-by method for field timeZone
+	 * @param timeZone the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DRaces for the specified timeZone
+	 */
+	public final CursorPage<DRace> queryPageByTimeZone(java.lang.String timeZone,
+            int pageSize, String cursorString) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_TIMEZONE, timeZone);
+            return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
+        }
+
+	 
+	/**
+         * {@inheritDoc}
+	 */
 	public final Iterable<DRace> queryByUpdatedBy(java.lang.String updatedBy) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_UPDATEDBY, updatedBy);
             return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
@@ -565,7 +647,9 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 		com.google.appengine.api.blobstore.BlobKey blobKey, 
 		java.lang.String displayName, 
 		java.lang.String extractorClassname, 
-		java.lang.String queryUrl) {
+		java.lang.String queryUrl, 
+		java.util.Date startDate, 
+		java.lang.String timeZone) {
 
             DRace domain = null;
             // if primaryKey specified, use it
@@ -585,6 +669,8 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
                     domain.setDisplayName(displayName);
                     domain.setExtractorClassname(extractorClassname);
                     domain.setQueryUrl(queryUrl);
+                    domain.setStartDate(startDate);
+                    domain.setTimeZone(timeZone);
                     // one-to-ones
                     // many-to-ones
 			

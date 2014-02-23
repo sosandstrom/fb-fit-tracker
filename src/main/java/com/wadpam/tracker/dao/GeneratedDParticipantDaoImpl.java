@@ -20,7 +20,7 @@ import com.wadpam.tracker.domain.DParticipant;
 /**
  * The DParticipant domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2014-02-22T07:59:31.216+0100.
+ * Generated on 2014-02-23T20:33:00.895+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDParticipantDaoImpl extends TypeDaoImpl<DParticipant, java.lang.Long> 
@@ -78,6 +78,9 @@ public class GeneratedDParticipantDaoImpl extends TypeDaoImpl<DParticipant, java
         else if (COLUMN_NAME_CREATEDDATE.equals(name)) {
             value = domain.getCreatedDate();
         }
+        else if (COLUMN_NAME_EXTUSERID.equals(name)) {
+            value = domain.getExtUserId();
+        }
         else if (COLUMN_NAME_RACEID.equals(name)) {
             value = domain.getRaceId();
         }
@@ -121,6 +124,9 @@ public class GeneratedDParticipantDaoImpl extends TypeDaoImpl<DParticipant, java
         else if (COLUMN_NAME_CREATEDDATE.equals(name)) {
             clazz = java.util.Date.class;
         }
+        else if (COLUMN_NAME_EXTUSERID.equals(name)) {
+            clazz = java.lang.String.class;
+        }
         else if (COLUMN_NAME_RACEID.equals(name)) {
             clazz = java.lang.Long.class;
         }
@@ -158,6 +164,9 @@ public class GeneratedDParticipantDaoImpl extends TypeDaoImpl<DParticipant, java
         }
         else if (COLUMN_NAME_CREATEDDATE.equals(name)) {
             domain.setCreatedDate((java.util.Date) value);
+        }
+        else if (COLUMN_NAME_EXTUSERID.equals(name)) {
+            domain.setExtUserId((java.lang.String) value);
         }
         else if (COLUMN_NAME_RACEID.equals(name)) {
             domain.setRaceId((java.lang.Long) value);
@@ -370,6 +379,38 @@ public class GeneratedDParticipantDaoImpl extends TypeDaoImpl<DParticipant, java
 	/**
          * {@inheritDoc}
 	 */
+	public final Iterable<DParticipant> queryByExtUserId(java.lang.String extUserId) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_EXTUSERID, extUserId);
+            return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
+	}
+	
+	/**
+	 * query-key-by method for attribute field extUserId
+	 * @param extUserId the specified attribute
+	 * @return an Iterable of keys to the DParticipants with the specified attribute
+	 */
+	public final Iterable<java.lang.Long> queryKeysByExtUserId(java.lang.String extUserId) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_EXTUSERID, extUserId);
+            return queryIterableKeys(0, -1, null, null, null, false, null, false, filter);
+	}
+
+	/**
+	 * query-page-by method for field extUserId
+	 * @param extUserId the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DParticipants for the specified extUserId
+	 */
+	public final CursorPage<DParticipant> queryPageByExtUserId(java.lang.String extUserId,
+            int pageSize, String cursorString) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_EXTUSERID, extUserId);
+            return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
+        }
+
+	 
+	/**
+         * {@inheritDoc}
+	 */
 	public final Iterable<DParticipant> queryByRaceId(java.lang.Long raceId) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_RACEID, raceId);
             return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
@@ -523,6 +564,7 @@ public class GeneratedDParticipantDaoImpl extends TypeDaoImpl<DParticipant, java
 	 */
 	public DParticipant persist(		java.lang.Long id, 
 		java.lang.String actionId, 
+		java.lang.String extUserId, 
 		java.lang.Long raceId, 
 		java.lang.Long userId) {
 
@@ -541,6 +583,7 @@ public class GeneratedDParticipantDaoImpl extends TypeDaoImpl<DParticipant, java
                     }
                     // fields
                     domain.setActionId(actionId);
+                    domain.setExtUserId(extUserId);
                     domain.setRaceId(raceId);
                     domain.setUserId(userId);
                     // one-to-ones
@@ -556,12 +599,14 @@ public class GeneratedDParticipantDaoImpl extends TypeDaoImpl<DParticipant, java
 	 * Persists an entity unless it already exists
 	 */
 	public DParticipant persist(java.lang.String actionId, 
+                java.lang.String extUserId, 
                 java.lang.Long raceId, 
                 java.lang.Long userId) {
             DParticipant domain = findByActionId(actionId);
             if (null == domain) {
                 domain = new DParticipant();
                 domain.setActionId(actionId);
+                domain.setExtUserId(extUserId);
                 domain.setRaceId(raceId);
                 domain.setUserId(userId);
                 persist(domain);

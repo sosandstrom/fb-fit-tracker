@@ -14,11 +14,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.CookieParam;
@@ -30,6 +32,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,8 +101,8 @@ public class PublicResource {
     @Path("course/{raceId}/split")
     public Response getSplits(@PathParam("raceId") Long raceId) {
         final Object raceKey = raceDao.getPrimaryKey(null, raceId);
-        Iterable<DSplit> splits = splitDao.queryByRaceKey(raceKey);
-        return Response.ok(splits).build();
+        TreeMap<Long, DSplit> splits = splitDao.mapByParentKey(raceKey);
+        return Response.ok(splits.values()).build();
     }
 
     @GET
@@ -107,6 +110,29 @@ public class PublicResource {
     public Response getRaces() {
         Iterable<DRace> races = raceDao.queryAll();
         return Response.ok(races).build();
+    }
+    
+    @GET
+    @Path("race/{raceId}")
+    public Response getRace(@PathParam("raceId") Long raceId) {
+        final DRace dRace = raceDao.findByPrimaryKey(raceId);
+        if (null == dRace) {
+            return Response.status(Status.NOT_FOUND).build();
+        }
+        UpdateRaceRequest race = new UpdateRaceRequest();
+        race.setDisplayName(dRace.getDisplayName());
+        race.setTimeZone(dRace.getTimeZone());
+        SimpleDateFormat sdf = DRaceDaoBean.getDateFormat(dRace.getTimeZone());
+        race.setStartTime(null != dRace.getStartDate() ? 
+                sdf.format(dRace.getStartDate()) : "");
+        
+        return Response.ok(race).build();
+    }
+    
+    @GET
+    @Path("timezone")
+    public Response getTimezoneIDs() {
+        return Response.ok(TimeZone.getAvailableIDs()).build();
     }
 
     public void writeActivityDataPoints(StringBuilder sb, 
@@ -163,8 +189,14 @@ public class PublicResource {
             meta(sb, "fitness:metrics:distance:units", "km");
 
             // and add a split
-            meta(sb, "fitness:splits:values:value", Float.toString(next.getDistance()/1000.0f));
             meta(sb, "fitness:splits:values:units", "km");
+            meta(sb, "fitness:splits:values:value", Float.toString(next.getDistance()/1000.0f));
+            meta(sb, "fitness:splits:values:units", "s");
+            meta(sb, "fitness:splits:values:value", Long.toString((next.getTimestamp()-startTime)/1000));
+            if (10.0 < next.getDistance()) {
+                meta(sb, "fitness:splits:values:units", "s/m");
+                meta(sb, "fitness:splits:values:value", Float.toString(((next.getTimestamp()-startTime)/1000)/next.getDistance()));
+            }
             
             prevPartSplit = next.getTimestamp();
             prevRaceSplit = next.getTrackPointId();

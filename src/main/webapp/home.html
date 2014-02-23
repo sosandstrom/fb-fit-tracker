@@ -4,8 +4,16 @@
     </head>
     <body>
         <form method="GET" action="/api/tracker" onsubmit="return enroll();">
-            <select id="raceId" name="raceId"></select>
-            <input type="submit" value="Enter Race" />
+            <fieldset>
+                <label for="raceId">Select race</label>
+                <select id="raceId" name="raceId"></select><br/>
+
+                <label for="extUserId">Bib number</label>
+                <input id="extUserId" name="extUserId" type="text" 
+                       placeholder="9999991678885900001A0996"/><br/>
+
+                <input type="submit" value="Enter Race" />
+            </fieldset>
         </form>
         <table>
             <thead>
@@ -33,7 +41,8 @@ function loadMyRaces() {
 }
     
 function enroll() {
-    crud_Read("api", "tracker?raceId=" + $("#raceId").val())
+    crud_Read("api", "tracker?raceId=" + $("#raceId").val() + 
+            "&extUserId=" + $("#extUserId").val())
     .done(function(data, statusText, jqXHR) {
         loadMyRaces();
     });

@@ -1,6 +1,7 @@
 package com.wadpam.tracker.domain;
 
 import com.google.appengine.api.blobstore.BlobKey;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 
@@ -27,6 +28,12 @@ public class DRace extends AbstractLongEntity {
   @Basic
   private String queryUrl;
 
+  @Basic
+  private Date startDate;
+
+  @Basic
+  private String timeZone;
+  
     public BlobKey getBlobKey() {
         return blobKey;
     }
@@ -58,4 +65,21 @@ public class DRace extends AbstractLongEntity {
   public void setExtractorClassname(String extractorClassname) {
     this.extractorClassname = extractorClassname;
   }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
+    }
+
 }

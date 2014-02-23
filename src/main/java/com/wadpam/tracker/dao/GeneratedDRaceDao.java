@@ -12,7 +12,7 @@ import net.sf.mardao.core.geo.DLocation;
 /**
  * DAO interface with finder methods for DRace entities.
  *
- * Generated on 2014-02-22T07:59:31.216+0100.
+ * Generated on 2014-02-23T20:33:00.895+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
@@ -33,6 +33,10 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 	static final String COLUMN_NAME_EXTRACTORCLASSNAME = "extractorClassname";
 	/** Column name for field queryUrl is "queryUrl" */
 	static final String COLUMN_NAME_QUERYURL = "queryUrl";
+	/** Column name for field startDate is "startDate" */
+	static final String COLUMN_NAME_STARTDATE = "startDate";
+	/** Column name for field timeZone is "timeZone" */
+	static final String COLUMN_NAME_TIMEZONE = "timeZone";
 	/** Column name for field updatedBy is "updatedBy" */
 	static final String COLUMN_NAME_UPDATEDBY = "updatedBy";
 	/** Column name for field updatedDate is "updatedDate" */
@@ -45,6 +49,8 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 		COLUMN_NAME_DISPLAYNAME,
 		COLUMN_NAME_EXTRACTORCLASSNAME,
 		COLUMN_NAME_QUERYURL,
+		COLUMN_NAME_STARTDATE,
+		COLUMN_NAME_TIMEZONE,
 		COLUMN_NAME_UPDATEDBY,
 		COLUMN_NAME_UPDATEDDATE);
 	/** The list of Basic attribute names */
@@ -54,6 +60,8 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 		COLUMN_NAME_DISPLAYNAME,
 		COLUMN_NAME_EXTRACTORCLASSNAME,
 		COLUMN_NAME_QUERYURL,
+		COLUMN_NAME_STARTDATE,
+		COLUMN_NAME_TIMEZONE,
 		COLUMN_NAME_UPDATEDBY,
 		COLUMN_NAME_UPDATEDDATE);
 	/** The list of attribute names */
@@ -212,6 +220,56 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 
 
 	/**
+	 * query-by method for field startDate
+	 * @param startDate the specified attribute
+	 * @return an Iterable of DRaces for the specified startDate
+	 */
+	Iterable<DRace> queryByStartDate(java.util.Date startDate);
+		
+	/**
+	 * query-keys-by method for field startDate
+	 * @param startDate the specified attribute
+	 * @return an Iterable of DRaces for the specified startDate
+	 */
+	Iterable<java.lang.Long> queryKeysByStartDate(java.util.Date startDate);
+
+	/**
+	 * query-page-by method for field startDate
+	 * @param startDate the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DRaces for the specified startDate
+	 */
+	CursorPage<DRace> queryPageByStartDate(java.util.Date startDate,
+            int pageSize, String cursorString);
+
+
+	/**
+	 * query-by method for field timeZone
+	 * @param timeZone the specified attribute
+	 * @return an Iterable of DRaces for the specified timeZone
+	 */
+	Iterable<DRace> queryByTimeZone(java.lang.String timeZone);
+		
+	/**
+	 * query-keys-by method for field timeZone
+	 * @param timeZone the specified attribute
+	 * @return an Iterable of DRaces for the specified timeZone
+	 */
+	Iterable<java.lang.Long> queryKeysByTimeZone(java.lang.String timeZone);
+
+	/**
+	 * query-page-by method for field timeZone
+	 * @param timeZone the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DRaces for the specified timeZone
+	 */
+	CursorPage<DRace> queryPageByTimeZone(java.lang.String timeZone,
+            int pageSize, String cursorString);
+
+
+	/**
 	 * query-by method for field updatedBy
 	 * @param updatedBy the specified attribute
 	 * @return an Iterable of DRaces for the specified updatedBy
@@ -280,6 +338,8 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 		com.google.appengine.api.blobstore.BlobKey blobKey, 
 		java.lang.String displayName, 
 		java.lang.String extractorClassname, 
-		java.lang.String queryUrl);	
+		java.lang.String queryUrl, 
+		java.util.Date startDate, 
+		java.lang.String timeZone);	
 
 }

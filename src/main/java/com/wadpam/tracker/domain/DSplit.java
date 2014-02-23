@@ -40,6 +40,12 @@ public class DSplit extends AbstractLongEntity {
 
   @Basic
   private Float distance;
+
+    @Override
+    public String toString() {
+        return name + '@' + timestamp;
+    }
+
   
     public Object getRaceKey() {
         return raceKey;

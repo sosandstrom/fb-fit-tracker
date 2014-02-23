@@ -28,6 +28,10 @@ public class DParticipant extends AbstractLongEntity {
     @Basic
     private String actionId;
 
+    /** External user id at results service */
+    @Basic
+    private String extUserId;
+    
     public Long getRaceId() {
         return raceId;
     }
@@ -51,6 +55,13 @@ public class DParticipant extends AbstractLongEntity {
     public void setActionId(String actionId) {
         this.actionId = actionId;
     }
-    
+
+    public String getExtUserId() {
+        return extUserId;
+    }
+
+    public void setExtUserId(String extUserId) {
+        this.extUserId = extUserId;
+    }
     
 }

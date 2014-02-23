@@ -3,6 +3,23 @@
         <title>Splits</title>
     </head>
     <body>
+        <h3>Edit this race</h3>
+        <form method="POST" action="#" id="raceForm" name="raceForm" onsubmit="return updateRace();">
+            <fieldset>
+                <label for="raceName">Race name</label>
+                <input type="text" id="raceName" name="raceName" /><br/>
+                
+                <label for="timeZone">Time zone</label>
+                <select id="timeZone" name="timeZone"></select><br/>
+                
+                <label for="startTime">Local start time</label>
+                <input type="text" id="startTime" name="startTime" placeholder="yyyy-MM-dd'T'HH:mm:ss" /><br/>
+                
+                <input type="submit" value="Update race" />
+            </fieldset>
+        </form>
+
+        <h3>Create new split</h3>
         <form method="POST" action="#" id="splitForm" name="splitForm" onsubmit="return createSplit();">
             <fieldset>
                 <label for="name">Split name</label>
@@ -49,10 +66,32 @@ function createSplit() {
     return false;
 }
 
+function updateRace() {
+    var raceId = getParameterByName("raceId");
+    crud_Update("/_adm/course", raceId, {
+        displayName: $("#raceName").val(),
+        timeZone: $("#timeZone").val(),
+        startTime: $("#startTime").val()
+    })
+    .done(function(data, statusText, jqXHR) {
+    });
+    return false;
+}
+
 function deleteSplit(splitId) {
     var raceId = getParameterByName("raceId");
     crud_Delete("/_adm/course/" + raceId + "/split", splitId);
     loadSplits();
+}
+
+function loadRace() {
+    var raceId = getParameterByName("raceId");
+    crud_Read("/pub/race", raceId)
+    .done(function(data, statusText, jqXHR) {
+        $("#raceName").val(data.displayName);
+        $("#timeZone").val(data.timeZone);
+        $("#startTime").val(data.startDate);
+    });
 }
 
 function loadSplits() {
@@ -82,7 +121,25 @@ function loadSplits() {
     });
 }
 
+function loadTimeZones() {
+    $("#timeZone").html("");
+    crud_Read("/pub", "timezone")
+    .done(function(data, statusText, jqXHR) {
+        $.each(data, function(index, item) {
+            $("#timeZone").append(
+                '<option value="' +
+                item +
+                '">' +
+                item +
+                '</option>'
+                );
+        });
+        loadRace();
+    });
+}
+
 $(function() {
+   loadTimeZones();
    loadSplits(); 
 });
         </script>

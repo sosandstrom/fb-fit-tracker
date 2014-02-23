@@ -2,6 +2,7 @@ package com.wadpam.tracker.dao;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.wadpam.tracker.domain.TrackPoint;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,9 +14,12 @@ import java.util.List;
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public interface DRaceDao extends GeneratedDRaceDao {
+    String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
     TrackPoint findNearest(Object raceKey, long minTimestamp, Float lat, Float lon);
 
     List<TrackPoint> getTrack(BlobKey blobKey);
-    
+
+    Iterable<Long> queryActive(Date now);
+
 }

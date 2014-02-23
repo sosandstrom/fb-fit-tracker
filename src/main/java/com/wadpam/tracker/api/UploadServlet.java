@@ -5,7 +5,6 @@
 package com.wadpam.tracker.api;
 
 import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.blobstore.BlobstoreInputStream;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.common.collect.ImmutableMap;
@@ -13,11 +12,8 @@ import com.wadpam.mardao.social.NetworkTemplate;
 import static com.wadpam.tracker.api.PublicResource.LOGGER;
 import com.wadpam.tracker.dao.DRaceDao;
 import com.wadpam.tracker.dao.DRaceDaoBean;
-import com.wadpam.tracker.dao.DTrackPointDao;
-import com.wadpam.tracker.dao.DTrackPointDaoBean;
 import com.wadpam.tracker.domain.DRace;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +32,6 @@ public class UploadServlet extends HttpServlet {
     public static final String NAME_BLOBKEY = "key";
 
     private final DRaceDao raceDao = new DRaceDaoBean();
-    private final DTrackPointDao trackPointDao = new DTrackPointDaoBean(raceDao);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -62,19 +57,11 @@ public class UploadServlet extends HttpServlet {
                 // schedule task for 10 minutes Blob processing:
                 // Queue defQ = QueueFactory.getDefaultQueue();
                 // defQ.add(TaskOptions.Builder.withUrl("/_admin/UploadServlet/parse").param(NAME_BLOBKEY, blobKey.getKeyString()));
-                race = raceDao.persist(null, blobKey, "Race", null, null);
+                race = raceDao.persist(null, blobKey, "Race", null, null, null, "Europe/Stockholm");
             }
             resp.setContentType(MediaType.APPLICATION_JSON);
             final OutputStream out = resp.getOutputStream();
             NetworkTemplate.MAPPER.writeValue(out, race);
-        }
-        else if (null != req.getParameter(NAME_BLOBKEY)) {
-            // parse GPX file from blobstore:
-            BlobKey blobKey = new BlobKey(req.getParameter(NAME_BLOBKEY));
-            InputStream bis = new BlobstoreInputStream(blobKey);
-
-            trackPointDao.parseGpx(bis);
-            bis.close();
         }
     }
 

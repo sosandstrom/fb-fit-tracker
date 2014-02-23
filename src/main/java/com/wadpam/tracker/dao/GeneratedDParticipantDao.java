@@ -12,7 +12,7 @@ import net.sf.mardao.core.geo.DLocation;
 /**
  * DAO interface with finder methods for DParticipant entities.
  *
- * Generated on 2014-02-22T07:59:31.216+0100.
+ * Generated on 2014-02-23T20:33:00.895+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Long> {
@@ -27,6 +27,8 @@ public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Lo
 	static final String COLUMN_NAME_CREATEDBY = "createdBy";
 	/** Column name for field createdDate is "createdDate" */
 	static final String COLUMN_NAME_CREATEDDATE = "createdDate";
+	/** Column name for field extUserId is "extUserId" */
+	static final String COLUMN_NAME_EXTUSERID = "extUserId";
 	/** Column name for field raceId is "raceId" */
 	static final String COLUMN_NAME_RACEID = "raceId";
 	/** Column name for field updatedBy is "updatedBy" */
@@ -40,6 +42,7 @@ public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Lo
 	static final List<String> COLUMN_NAMES = Arrays.asList(		COLUMN_NAME_ACTIONID,
 		COLUMN_NAME_CREATEDBY,
 		COLUMN_NAME_CREATEDDATE,
+		COLUMN_NAME_EXTUSERID,
 		COLUMN_NAME_RACEID,
 		COLUMN_NAME_UPDATEDBY,
 		COLUMN_NAME_UPDATEDDATE,
@@ -48,6 +51,7 @@ public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Lo
 	static final List<String> BASIC_NAMES = Arrays.asList(		COLUMN_NAME_ACTIONID,
 		COLUMN_NAME_CREATEDBY,
 		COLUMN_NAME_CREATEDDATE,
+		COLUMN_NAME_EXTUSERID,
 		COLUMN_NAME_RACEID,
 		COLUMN_NAME_UPDATEDBY,
 		COLUMN_NAME_UPDATEDDATE,
@@ -118,6 +122,31 @@ public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Lo
 	 * @return a Page of DParticipants for the specified createdDate
 	 */
 	CursorPage<DParticipant> queryPageByCreatedDate(java.util.Date createdDate,
+            int pageSize, String cursorString);
+
+
+	/**
+	 * query-by method for field extUserId
+	 * @param extUserId the specified attribute
+	 * @return an Iterable of DParticipants for the specified extUserId
+	 */
+	Iterable<DParticipant> queryByExtUserId(java.lang.String extUserId);
+		
+	/**
+	 * query-keys-by method for field extUserId
+	 * @param extUserId the specified attribute
+	 * @return an Iterable of DParticipants for the specified extUserId
+	 */
+	Iterable<java.lang.Long> queryKeysByExtUserId(java.lang.String extUserId);
+
+	/**
+	 * query-page-by method for field extUserId
+	 * @param extUserId the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DParticipants for the specified extUserId
+	 */
+	CursorPage<DParticipant> queryPageByExtUserId(java.lang.String extUserId,
             int pageSize, String cursorString);
 
 
@@ -246,6 +275,7 @@ public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Lo
 	 */
 	DParticipant persist(		java.lang.Long id, 
 		java.lang.String actionId, 
+		java.lang.String extUserId, 
 		java.lang.Long raceId, 
 		java.lang.Long userId);	
 
@@ -253,6 +283,7 @@ public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Lo
 	 * Persists an entity unless it already exists
 	 */
 	 DParticipant persist(java.lang.String actionId, 
+                java.lang.String extUserId, 
                 java.lang.Long raceId, 
                 java.lang.Long userId);
 

@@ -7,15 +7,10 @@ import com.wadpam.mardao.oauth.web.OAuth2Filter;
 import com.wadpam.mardao.social.NetworkTemplate;
 import com.wadpam.tracker.dao.DParticipantDao;
 import com.wadpam.tracker.dao.DRaceDao;
-import com.wadpam.tracker.dao.DRaceDaoBean;
 import com.wadpam.tracker.domain.DParticipant;
-import com.wadpam.tracker.opengraph.FitnessCourse;
-import com.wadpam.tracker.opengraph.FitnessRuns;
-import com.wadpam.tracker.opengraph.RequestObject;
 import com.wadpam.tracker.opengraph.StandardObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -52,9 +47,11 @@ public class TrackerResource {
     }
     
     @GET
-    public Response registerParticipant(@QueryParam("raceId") Long raceId) {
+    public Response registerParticipant(@QueryParam("raceId") Long raceId,
+            @QueryParam("extUserId") String extUserId) {
         Long userId = OAuth2Filter.getUserId(request);
-        DParticipant participant = participantDao.persist(null, null, raceId, userId);
+        DParticipant participant = participantDao.persist(null, null, extUserId, 
+                raceId, userId);
         return Response.ok(participant).build();
     }
 
