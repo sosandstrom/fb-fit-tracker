@@ -82,10 +82,15 @@ $(function() {
     // populate search name field
     crud_Read("api/oauth2user", "me")
     .success(function(data) {
-        $("#searchName").val(data.displayName);
+        var beginIndex = data.displayName.lastIndexOf(' ');
+        var lastName = data.displayName.substr(beginIndex+1);
+        $("#searchName").val(lastName);
+        searchParticipants();
     });
 
     loadMyRaces();
+    
+    $("#searchName").focus();
 });
         </script>
     </body>
