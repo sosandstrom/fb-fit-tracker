@@ -68,6 +68,8 @@ public abstract class AbstractSplitsExtractor {
     public abstract Map<DSplit,DSplit> getPassedSplits(DRace race, 
             TreeMap<Long, DSplit> raceSplits, DParticipant participant) throws IOException;
 
+    public abstract TreeMap<String,String> searchForParticipants(DRace race, String searchName);
+    
     private void updateSplits(DRace race, DParticipant participant, 
             TreeMap<Long, DSplit> raceSplits, Map<DSplit,DSplit> passedSplitsMap) {
         

@@ -137,16 +137,25 @@ public class AdminResource {
         final DRace race = raceDao.findByPrimaryKey(raceId);
         LOGGER.info("Active race: {} url {}", race.getDisplayName(), race.getQueryUrl());
         
+        AbstractSplitsExtractor extractor = createExtractor(race,
+                raceDao, participantDao, splitDao);
+        if (null != extractor) {
+            extractor.setAdminResource(this);
+            extractor.process(race);
+        }
+    }
+
+
+    public static AbstractSplitsExtractor createExtractor(DRace race, DRaceDao raceDao, DParticipantDao participantDao, DSplitDao splitDao) {
+        AbstractSplitsExtractor extractor = null;
         if (null != race.getExtractorClassname()) {
             try {
                 Class extractorClass = Class.forName(race.getExtractorClassname());
-                AbstractSplitsExtractor extractor = (AbstractSplitsExtractor) extractorClass.newInstance();
-                extractor.setAdminResource(this);
+                extractor = (AbstractSplitsExtractor) extractorClass.newInstance();
                 extractor.setParticipantDao(participantDao);
                 extractor.setRaceDao(raceDao);
                 extractor.setSplitDao(splitDao);
                 
-                extractor.process(race);
             } catch (InstantiationException ex) {
                 LOGGER.error("Instantiating extractor", ex);
             } catch (IllegalAccessException ex) {
@@ -155,8 +164,9 @@ public class AdminResource {
                 LOGGER.error("Extractor", ex);
             }
         }
+        return extractor;
     }
-
+    
     private void upsertFitnessObject(DParticipant participant, DSplit split) {
         
         // get most recent access token
@@ -205,9 +215,9 @@ public class AdminResource {
                 accessToken, Map.class, run,
                 ImmutableMap.builder().put("course", courseUrl)
                 .put("start_time", DRaceDaoBean.SDF.format(new Date(startTime)))
-                .put("expires_in", "28800") // 8h
+                .put("expires_in", "86400") // 24h
                 .put("live_text", "Send me cheers along the way by liking or commenting on this post.")
-                .put("privacy", "{\"value\":\"SELF\"}")
+                //.put("privacy", "{\"value\":\"SELF\"}")
                 .build());
         return response.get("id");
     }

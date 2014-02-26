@@ -8,14 +8,19 @@ import com.wadpam.mardao.social.NetworkTemplate;
 import com.wadpam.tracker.dao.DParticipantDao;
 import com.wadpam.tracker.dao.DRaceDao;
 import com.wadpam.tracker.domain.DParticipant;
+import com.wadpam.tracker.domain.DRace;
+import com.wadpam.tracker.extractor.AbstractSplitsExtractor;
 import com.wadpam.tracker.opengraph.StandardObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -44,6 +49,21 @@ public class TrackerResource {
     public TrackerResource(DParticipantDao participantDao, DRaceDao raceDao) {
         this.participantDao = participantDao;
         this.raceDao = raceDao;
+    }
+    
+    @GET
+    @Path("search/{raceId}")
+    public Response searchForParticipants(@PathParam("raceId") Long raceId,
+            @QueryParam("searchName") String searchName) {
+    
+        final DRace race = raceDao.findByPrimaryKey(raceId);
+        AbstractSplitsExtractor userIdExtractor = AdminResource.createExtractor(race, raceDao, participantDao, null);
+        if (null != userIdExtractor) {
+            TreeMap<String, String> map = userIdExtractor.searchForParticipants(race, searchName);
+            return Response.ok(map.entrySet()).build();
+        }
+        
+        return Response.serverError().build();
     }
     
     @GET

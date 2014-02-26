@@ -13,6 +13,7 @@ import static com.wadpam.tracker.api.PublicResource.LOGGER;
 import com.wadpam.tracker.dao.DRaceDao;
 import com.wadpam.tracker.dao.DRaceDaoBean;
 import com.wadpam.tracker.domain.DRace;
+import com.wadpam.tracker.extractor.VasaloppsExtractor;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -57,7 +58,9 @@ public class UploadServlet extends HttpServlet {
                 // schedule task for 10 minutes Blob processing:
                 // Queue defQ = QueueFactory.getDefaultQueue();
                 // defQ.add(TaskOptions.Builder.withUrl("/_admin/UploadServlet/parse").param(NAME_BLOBKEY, blobKey.getKeyString()));
-                race = raceDao.persist(null, blobKey, "Race", null, null, null, "Europe/Stockholm");
+                race = raceDao.persist(null, blobKey, "Race", VasaloppsExtractor.class.getName(), 
+                        "http://results.vasaloppet.se/2012/?content=detail&fpid=search&pid=search&lang=SE&event=%C3%96SM_9999991678885900000002FD&idp=", 
+                        null, "Europe/Stockholm");
             }
             resp.setContentType(MediaType.APPLICATION_JSON);
             final OutputStream out = resp.getOutputStream();

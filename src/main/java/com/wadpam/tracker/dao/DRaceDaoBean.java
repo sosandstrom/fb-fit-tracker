@@ -178,8 +178,8 @@ public class DRaceDaoBean
     @Override
     public Iterable<Long> queryActive(Date now) {
         Date inOneMinute = new Date(now.getTime() + 60*1000);
-        Date eightHoursAgo = new Date(now.getTime() - 8*60*60*1000);
-        final Filter notExpired = createGreaterThanOrEqualFilter(COLUMN_NAME_STARTDATE, eightHoursAgo);
+        Date fourteenHoursAgo = new Date(now.getTime() - 14*60*60*1000);
+        final Filter notExpired = createGreaterThanOrEqualFilter(COLUMN_NAME_STARTDATE, fourteenHoursAgo);
         final Filter hasStarted = new Filter(COLUMN_NAME_STARTDATE, Query.FilterOperator.LESS_THAN, inOneMinute);
         return queryIterableKeys(0, -1, null, null, COLUMN_NAME_STARTDATE, true, 
                 null, false, hasStarted, notExpired);

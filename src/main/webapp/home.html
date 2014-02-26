@@ -3,18 +3,22 @@
         <title>Home</title>
     </head>
     <body>
+        <h3>Enter race</h3>
         <form method="GET" action="/api/tracker" onsubmit="return enroll();">
             <fieldset>
                 <label for="raceId">Select race</label>
                 <select id="raceId" name="raceId"></select><br/>
 
-                <label for="extUserId">Bib number</label>
-                <input id="extUserId" name="extUserId" type="text" 
-                       placeholder="9999991678885900001A0996"/><br/>
+                <label for="searchName">Last name</label>
+                <input id="searchName" name="searchName" onchange="searchParticipants();" /><br/>
+                
+                <label for="extUserId">Participant</label>
+                <select id="extUserId" name="extUserId"></select><br/>
 
                 <input type="submit" value="Enter Race" />
             </fieldset>
         </form>
+        <h3>Registered races</h3>
         <table>
             <thead>
                 <tr>
@@ -26,6 +30,20 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="/js/crud_api.js"></script>
         <script type="text/javascript">
+function searchParticipants() {
+    var searchName = $("#searchName").val();
+    var raceId = $("#raceId").val();
+    $.getJSON("/api/tracker/search/" + raceId +
+        "?searchName=" + searchName)
+    .done(function(data, statusText, jqXHR) {
+        $("#extUserId").html("");
+        $.each(data, function(index, item) {
+            $("#extUserId").append('<option value="' + item.value + 
+                '">' + item.key + '</option>');
+        });
+    });
+}
+            
 function loadMyRaces() {
     $("#racesBody").html("");
     crud_Read("api/participant", "me")
@@ -49,18 +67,26 @@ function enroll() {
 
     return false;
 }            
-                            $(function() {
-                                crud_Read("pub", "course")
-                                .done(function(data, statusText, jqXHR) {
-                                    $.each(data, function(index, item) {
-                                        $("#raceId").append('<option value="' +
-                                            item.id + '">' + item.displayName + 
-                                            '</option>');
-                                    });
-                                });
-                                
-                                loadMyRaces();
-                            });
+
+$(function() {
+    // populate race dropdown
+    crud_Read("pub", "course")
+    .done(function(data, statusText, jqXHR) {
+        $.each(data, function(index, item) {
+            $("#raceId").append('<option value="' +
+                item.id + '">' + item.displayName + 
+                '</option>');
+        });
+    });
+    
+    // populate search name field
+    crud_Read("api/oauth2user", "me")
+    .success(function(data) {
+        $("#searchName").val(data.displayName);
+    });
+
+    loadMyRaces();
+});
         </script>
     </body>
 </html>
