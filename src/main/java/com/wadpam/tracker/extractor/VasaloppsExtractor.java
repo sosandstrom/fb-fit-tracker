@@ -123,16 +123,12 @@ public class VasaloppsExtractor extends AbstractSplitsExtractor {
         // <td><img src="http://static.r.mikatiming.de/stages/blue/images/flags/16x16/SWE.png" alt="SWE" title="SWE"/></td>
         // <td>&#187; <a href="?content=detail&amp;fpid=search&amp;pid=search&amp;idp=9999991678885900001BAE65&amp;lang=SE&amp;event=ÖSM_9999991678885900000002FD">Nilsson, Alf (SWE)</a></td>
         // <td>H60</td>
-        final String regex = "<td>([^<]*)</td>\\s*<td><img[^\\n]*\\n[^\\n]*;idp=([^&]+)&amp;[^>]*>([^<]+)[^\\n]*\\n\\s*<td>([^<]*)</td>";//\\idp=";//([^\\&]+).+\">([^<]+)</a></td>\\s*<td>([^<]*)</td>";
+        final String regex = "<td>([^<]*)</td>\\s*<td><img[^\\n]*\\n[^\\n]*;idp=([^&]+)&amp;[^>]*>([^<]+)[^\\n]*\\n\\s*<td>([^<]*)</td>";
         final Pattern pattern = Pattern.compile(regex);
         Matcher m = pattern.matcher(page);
         final TreeMap<String, String> map = new TreeMap<String, String>();
         while (m.find()) {
-//            System.out.println(m.group(1));
-//            System.out.println(m.group(2));
-//            System.out.println(m.group(3));
-//            System.out.println(m.group(4));
-            System.out.println(m.group(3) + ' ' + m.group(4) + " #" + m.group(1) + ", " + m.group(2));
+//            System.out.println(m.group(3) + ' ' + m.group(4) + " #" + m.group(1) + ", " + m.group(2));
             map.put(m.group(3) + ' ' + m.group(4) + " #" + m.group(1), m.group(2));
         }
         return map;

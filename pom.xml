@@ -11,7 +11,7 @@
   <!-- Specify hard-coded project properties here -->
   <properties>
     <mardao.version>2.3.4-SNAPSHOT</mardao.version>
-    <gae.version>1.7.7</gae.version>
+    <gae.version>1.8.2</gae.version>
     <gae.application.version>lab</gae.application.version>
     <gae.application.id>${project.artifactId}</gae.application.id>
     <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
@@ -96,10 +96,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>2.5.1</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.7</source>
+          <target>1.7</target>
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
@@ -203,8 +203,8 @@
           <dependency>
             <groupId>net.kindleit</groupId>
             <artifactId>gae-runtime</artifactId>
-            <version>1.7.5.1</version>
-            <!--<version>${gae.version}</version>-->
+            <!-- <version>1.7.5.1</version>-->
+            <version>${gae.version}</version>
             <type>pom</type>
           </dependency>
           <dependency>

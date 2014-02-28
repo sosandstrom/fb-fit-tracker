@@ -1,35 +1,57 @@
 <html>
     <head>
-        <title>Home</title>
+        <title>Enter race</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="js/kickstart.js"></script> <!-- KICKSTART -->
+        <link rel="stylesheet" href="css/kickstart.css" media="all" /> <!-- KICKSTART -->
+        <link rel="stylesheet" href="css/style.css" media="all" /> <!-- KICKSTART -->
     </head>
-    <body>
-        <h3>Enter race</h3>
-        <form method="GET" action="/api/tracker" onsubmit="return enroll();">
-            <fieldset>
-                <label for="raceId">Select race</label>
-                <select id="raceId" name="raceId"></select><br/>
+    <body >
+        <div class='grid'>
+            <h3>Enter race</h3>
+            <ul class="tabs"></ul>
+            <div id='tabr1' class='tab-content'>
+                <div class='col_3'></div>
+                <div class='col_6'>
+                    
+                <form class='vertical' method="GET" action="/api/tracker" onsubmit="return enroll();">
+                    <fieldset>
+                        <label for="raceId">Select race</label>
+                        <select id="raceId" name="raceId"></select><br/>
 
-                <label for="searchName">Last name</label>
-                <input id="searchName" name="searchName" onchange="searchParticipants();" /><br/>
-                
-                <label for="extUserId">Participant</label>
-                <select id="extUserId" name="extUserId"></select><br/>
+                        <label for="searchName">Last name</label>
+                        <input id="searchName" name="searchName" onchange="searchParticipants();" /><br/>
 
-                <input type="submit" value="Enter Race" />
-            </fieldset>
-        </form>
-        <h3>Registered races</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>raceId</th><th>fitness actionId</th><th>Edit</th>
-                </tr>
-            </thead>
-            <tbody id="racesBody"></tbody>
-        </table>
+                        <label for="extUserId">Participant</label>
+                        <select id="extUserId" name="extUserId"></select><br/>
+
+                        <input type="submit" value="Enter Race" />
+                    </fieldset>
+                </form>
+
+                </div>
+                <div class='col_3'></div>
+            </div>
+        </div>
+            
+        <div class='grid'>
+            <h3>Registered races</h3>
+            <ul class="tabs"></ul>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Race</th>
+                        </tr>
+                    </thead>
+                    <tbody id="racesBody"></tbody>
+                </table>
+
+        </div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script src="/js/crud_api.js"></script>
         <script type="text/javascript">
+var races = [];
 function searchParticipants() {
     var searchName = $("#searchName").val();
     var raceId = $("#raceId").val();
@@ -44,16 +66,23 @@ function searchParticipants() {
     });
 }
             
+function getRaceName(raceId) {
+    var raceName = '';
+    $.each(races, function(index, item) {
+        if (raceId == item.id) {
+            raceName = item.displayName;
+        }
+    });
+    return raceName;
+}            
+            
 function loadMyRaces() {
     $("#racesBody").html("");
     crud_Read("api/participant", "me")
     .done(function(data, statusText, jqXHR) {
         $.each(data, function(index, item) {
             $("#racesBody").append("<tr><td>" +
-                item.raceId + "</td><td>" + item.actionId + 
-                "</td><td><a href='splits.html?raceId=" + item.raceId + 
-                "&participantId=" + item.id + "'>" + item.actionId + 
-                "</a></td></tr>");
+                getRaceName(item.raceId) + "</td></tr>");
         });
     });
 }
@@ -72,6 +101,7 @@ $(function() {
     // populate race dropdown
     crud_Read("pub", "course")
     .done(function(data, statusText, jqXHR) {
+        races = data;
         $.each(data, function(index, item) {
             $("#raceId").append('<option value="' +
                 item.id + '">' + item.displayName + 

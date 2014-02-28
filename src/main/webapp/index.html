@@ -2,20 +2,30 @@
 <html>
     <head>
         <title>Sign in</title>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="js/kickstart.js"></script> <!-- KICKSTART -->
+        <link rel="stylesheet" href="css/kickstart.css" media="all" /> <!-- KICKSTART -->
+        <link rel="stylesheet" href="css/style.css" media="all" /> <!-- KICKSTART -->
     </head>
     <body>
+        <div class='grid'>
+            <h3>Sign in</h3>
+            <div class='tab-content center'>
+                
 
-        <div class="container">
-            <a id="signin" href="#" >Sign in with Facebook</a>
+            <button class="large black center" id="signin">
+                <i class="icon-facebook-sign" ></i> Sign in using Facebook
+            </button>
+            
+            </div>
         </div>
-
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        
         <script type="text/javascript">
             if (-1 < location.href.search('localhost')) {
-                $("#signin").attr("href", "https://www.facebook.com/dialog/oauth?response_type=token&client_id=255653361131262&scope=publish_actions&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Ffacebook-callback.html");
+                $("#signin").attr("onclick", "window.location.href='https://www.facebook.com/dialog/oauth?response_type=token&client_id=255653361131262&scope=publish_actions&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Ffacebook-callback.html'");
             }
             else {
-                $("#signin").attr("href", "https://www.facebook.com/dialog/oauth?response_type=token&client_id=478161362293304&scope=publish_actions&redirect_uri=https%3A%2F%2Fbroker-web.appspot.com%2Ffacebook-callback.html");
+                $("#signin").attr("onclick", "window.location.href='https://www.facebook.com/dialog/oauth?response_type=token&client_id=478161362293304&scope=publish_actions&redirect_uri=https%3A%2F%2Fbroker-web.appspot.com%2Ffacebook-callback.html'");
             }
         </script>
     </body>

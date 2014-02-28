@@ -7,9 +7,12 @@
 	<static-files>
 		<include path="/robots.txt" />
 		<include path="/favicon.ico" />
-		<include path="/images/**" />
+		<include path="/**.png" />
 		<include path="/**.html" />
 		<include path="/**.js" />
+		<include path="/**.css" />
+		<include path="/**.ttf" />
+		<include path="/**.woff" />
 	</static-files>
 
 	<!-- Configure java.util.logging -->
