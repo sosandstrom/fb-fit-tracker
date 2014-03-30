@@ -148,7 +148,7 @@ public class VasaloppsExtractor extends AbstractSplitsExtractor {
                 .put("event_main_group", "2014")
                 .put("event", event)
                 .put("search[name]", searchName)
-                .put("num_results", "25")
+                .put("num_results", "250")
                 .build();
         String page = templ.post(url, headers, request, String.class);
         return page;

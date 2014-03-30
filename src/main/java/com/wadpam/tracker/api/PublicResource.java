@@ -108,7 +108,7 @@ public class PublicResource {
     @GET
     @Path("course")
     public Response getRaces() {
-        Iterable<DRace> races = raceDao.queryAll();
+        Iterable<DRace> races = raceDao.queryOpen(new Date());
         return Response.ok(races).build();
     }
     
@@ -209,8 +209,10 @@ public class PublicResource {
         meta(sb, "fitness:duration:units", "s");
         meta(sb, "fitness:duration:value", Long.toString((prevPartSplit-startTime)/1000));
         // tag course with pace
-        meta(sb, "fitness:pace:units", "s/m");
-        meta(sb, "fitness:pace:value", Float.toString(((prevPartSplit-startTime)/1000)/next.getDistance()));
+        if (10.0 < next.getDistance()) {
+            meta(sb, "fitness:pace:units", "s/m");
+            meta(sb, "fitness:pace:value", Float.toString(((prevPartSplit-startTime)/1000)/next.getDistance()));
+        }
     }
 
     public static void writeActivityDataPoint(StringBuilder sb, TrackPoint trkpt, long t) {

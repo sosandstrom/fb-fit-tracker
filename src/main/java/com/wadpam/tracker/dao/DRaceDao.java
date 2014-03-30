@@ -1,6 +1,7 @@
 package com.wadpam.tracker.dao;
 
 import com.google.appengine.api.blobstore.BlobKey;
+import com.wadpam.tracker.domain.DRace;
 import com.wadpam.tracker.domain.TrackPoint;
 import java.util.Date;
 import java.util.List;
@@ -21,5 +22,7 @@ public interface DRaceDao extends GeneratedDRaceDao {
     List<TrackPoint> getTrack(BlobKey blobKey);
 
     Iterable<Long> queryActive(Date now);
+
+    Iterable<DRace> queryOpen(Date now);
 
 }

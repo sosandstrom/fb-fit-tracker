@@ -174,7 +174,7 @@ public class AdminResource {
         final String accessToken = connectionDao.getAccessToken(userKey, DConnectionDao.PROVIDER_ID_FACEBOOK);
         
         if (null != accessToken) {
-
+            
             // stuff needed to create fitness run:
             final Object splitKey = splitDao.getPrimaryKey(split);
             final String splitKeyString = splitDao.getKeyString(splitKey);
@@ -216,7 +216,8 @@ public class AdminResource {
                 ImmutableMap.builder().put("course", courseUrl)
                 .put("start_time", DRaceDaoBean.SDF.format(new Date(startTime)))
                 .put("expires_in", "86400") // 24h
-                .put("live_text", "Send me cheers along the way by liking or commenting on this post.")
+                .put("fb:live_text", "Send me cheers along the way by liking or commenting on this post.")
+                .put("fb:explicitly_shared", "true")
                 //.put("privacy", "{\"value\":\"SELF\"}")
                 .build());
         return response.get("id");

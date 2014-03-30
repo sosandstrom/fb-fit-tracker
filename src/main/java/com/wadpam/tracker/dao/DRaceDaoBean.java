@@ -5,6 +5,7 @@ import com.google.appengine.api.blobstore.BlobstoreInputStream;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import static com.wadpam.tracker.dao.GeneratedDRaceDao.COLUMN_NAME_STARTDATE;
 import com.wadpam.tracker.domain.DRace;
 import com.wadpam.tracker.domain.TrackPoint;
 import java.io.IOException;
@@ -183,6 +184,17 @@ public class DRaceDaoBean
         final Filter hasStarted = new Filter(COLUMN_NAME_STARTDATE, Query.FilterOperator.LESS_THAN, inOneMinute);
         return queryIterableKeys(0, -1, null, null, COLUMN_NAME_STARTDATE, true, 
                 null, false, hasStarted, notExpired);
+    }
+
+
+    @Override
+    public Iterable<DRace> queryOpen(Date now) {
+        Date inOneYear = new Date(now.getTime() + 300L*24L*60L*60L*1000L);
+        Date fourteenHoursAgo = new Date(now.getTime() - 14*60*60*1000);
+        final Filter notExpired = createGreaterThanOrEqualFilter(COLUMN_NAME_STARTDATE, fourteenHoursAgo);
+        final Filter hasOpened = new Filter(COLUMN_NAME_STARTDATE, Query.FilterOperator.LESS_THAN, inOneYear);
+        return queryIterable(false, 0, -1, null, null, COLUMN_NAME_STARTDATE, true, 
+                null, false, hasOpened, notExpired);
     }
 
     
