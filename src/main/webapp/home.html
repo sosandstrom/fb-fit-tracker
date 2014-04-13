@@ -22,6 +22,9 @@
                         <label for="searchName">Last name</label>
                         <input id="searchName" name="searchName" onchange="searchParticipants();" /><br/>
 
+                        <label for="firstName">First name</label>
+                        <input id="firstName" name="firstName" onchange="searchParticipants();" /><br/>
+
                         <label for="extUserId">Participant</label>
                         <select id="extUserId" name="extUserId"></select><br/>
 
@@ -53,10 +56,11 @@
         <script type="text/javascript">
 var races = [];
 function searchParticipants() {
-    var searchName = $("#searchName").val();
+    var searchName = encodeURI($("#searchName").val());
+    var firstName = encodeURI($("#firstName").val());
     var raceId = $("#raceId").val();
     $.getJSON("/api/tracker/search/" + raceId +
-        "?searchName=" + searchName)
+        "?searchName=" + searchName + "&firstName=" + firstName)
     .done(function(data, statusText, jqXHR) {
         $("#extUserId").html("");
         $.each(data, function(index, item) {
@@ -113,7 +117,9 @@ $(function() {
     crud_Read("api/oauth2user", "me")
     .success(function(data) {
         var beginIndex = data.displayName.lastIndexOf(' ');
+        var firstName = data.displayName.substr(0, beginIndex);
         var lastName = data.displayName.substr(beginIndex+1);
+        $("#firstName").val(firstName);
         $("#searchName").val(lastName);
         searchParticipants();
     });

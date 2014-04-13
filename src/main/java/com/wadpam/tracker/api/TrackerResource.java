@@ -54,12 +54,13 @@ public class TrackerResource {
     @GET
     @Path("search/{raceId}")
     public Response searchForParticipants(@PathParam("raceId") Long raceId,
-            @QueryParam("searchName") String searchName) {
+            @QueryParam("searchName") String searchName,
+            @QueryParam("firstName") String firstName) {
     
         final DRace race = raceDao.findByPrimaryKey(raceId);
         AbstractSplitsExtractor userIdExtractor = AdminResource.createExtractor(race, raceDao, participantDao, null);
         if (null != userIdExtractor) {
-            TreeMap<String, String> map = userIdExtractor.searchForParticipants(race, searchName);
+            TreeMap<String, String> map = userIdExtractor.searchForParticipants(race, searchName, firstName);
             return Response.ok(map.entrySet()).build();
         }
         

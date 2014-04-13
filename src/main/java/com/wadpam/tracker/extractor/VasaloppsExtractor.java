@@ -109,10 +109,10 @@ public class VasaloppsExtractor extends AbstractSplitsExtractor {
     }
     
     @Override
-    public TreeMap<String,String> searchForParticipants(DRace race, String searchName) {
+    public TreeMap<String,String> searchForParticipants(DRace race, String searchName, String firstName) {
         
         final String event = getEvent(race.getQueryUrl());
-        final String page = getSearchResponse(event, searchName);
+        final String page = getSearchResponse(event, searchName, firstName);
         TreeMap<String, String> map = matchForParticipants(page);
         
         return map;
@@ -134,9 +134,9 @@ public class VasaloppsExtractor extends AbstractSplitsExtractor {
         return map;
     }
 
-    protected static String getSearchResponse(String event, String searchName) {
+    protected static String getSearchResponse(String event, String searchName, String firstName) {
         NetworkTemplate templ = new NetworkTemplate();
-        String url = "http://results.vasaloppet.se/2012/";
+        String url = "http://goteborgsvarvet.r.mikatiming.de/2014/"; //http://results.vasaloppet.se/2012/";
         ImmutableMap<String, String> headers = ImmutableMap.<String, String>builder()
                 .put(NetworkTemplate.CONTENT_TYPE, NetworkTemplate.MIME_FORM) //"multipart/form-data; boundary=----WebKitFormBoundarywfmgztRSGXfO03xA")
                 .build();
@@ -148,14 +148,16 @@ public class VasaloppsExtractor extends AbstractSplitsExtractor {
                 .put("event_main_group", "2014")
                 .put("event", event)
                 .put("search[name]", searchName)
+                .put("search[firstname]", firstName)
                 .put("num_results", "250")
                 .build();
+        LOGGER.info("Search {}", request);
         String page = templ.post(url, headers, request, String.class);
         return page;
     }
 
     public static void main(String args[]) {
-          String page = getSearchResponse("ÖSM_9999991678885900000002FD", "Nilsson");
+          String page = getSearchResponse("ÖSM_9999991678885900000002FD", "Nilsson", "");
 //        String page =
 //        "<td>15827</td>\n" +
 //        "<td><img src=\"http://static.r.mikatiming.de/stages/blue/images/flags/16x16/SWE.png\" alt=\"SWE\" title=\"SWE\"/></td>\n" +
