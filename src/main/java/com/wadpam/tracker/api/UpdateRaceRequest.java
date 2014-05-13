@@ -6,6 +6,7 @@ package com.wadpam.tracker.api;
  */
 class UpdateRaceRequest {
     private String displayName;
+    private String imageUri;
     private String startTime;
     private String timeZone;
 
@@ -31,6 +32,14 @@ class UpdateRaceRequest {
 
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
     
 }

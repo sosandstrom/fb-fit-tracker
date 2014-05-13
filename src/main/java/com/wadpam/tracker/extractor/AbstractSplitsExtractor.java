@@ -11,10 +11,8 @@ import com.wadpam.tracker.domain.DRace;
 import com.wadpam.tracker.domain.DSplit;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +33,7 @@ public abstract class AbstractSplitsExtractor {
 
     public void process(DRace race) {
         // query and add participants:
-        Iterable<DParticipant> r = participantDao.queryByRaceId(race.getId());
+        Iterable<DParticipant> r = participantDao.queryPending(race.getId());
         final ArrayList<DParticipant> registered = new ArrayList<DParticipant>();
         for (DParticipant participant : r) {
             if (!Strings.isNullOrEmpty(participant.getExtUserId())) {
@@ -53,6 +51,7 @@ public abstract class AbstractSplitsExtractor {
         
         // now, process all properly registered participants
         for (DParticipant participant : registered) {
+            LOGGER.debug("participant id={}, userId={}", participant.getId(), participant.getUserId());
             try {
                 final Map<DSplit,DSplit> splits = getPassedSplits(race, raceSplits, 
                         participant);
@@ -95,6 +94,12 @@ public abstract class AbstractSplitsExtractor {
                     }
                     else {
                         // LOGGER.debug("Split {} already persisted.", passedSplit);
+                        if (DSplitDao.NAME_FINISH.equals(raceSplit.getName())) {
+                            
+                            // update status to disable future checks
+                            participant.setStatus(DParticipantDao.STATUS_FINISHED);
+                            participantDao.update(participant);
+                        }
                     }
                 }
             }

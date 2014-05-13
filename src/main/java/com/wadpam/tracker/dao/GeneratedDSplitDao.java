@@ -12,7 +12,7 @@ import net.sf.mardao.core.geo.DLocation;
 /**
  * DAO interface with finder methods for DSplit entities.
  *
- * Generated on 2014-02-23T20:33:00.895+0100.
+ * Generated on 2014-04-18T20:33:18.209+0200.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public interface GeneratedDSplitDao extends Dao<DSplit, java.lang.Long> {

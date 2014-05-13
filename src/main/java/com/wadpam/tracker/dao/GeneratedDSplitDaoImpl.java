@@ -20,7 +20,7 @@ import com.wadpam.tracker.domain.DSplit;
 /**
  * The DSplit domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2014-02-23T20:33:00.895+0100.
+ * Generated on 2014-04-18T20:33:18.209+0200.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDSplitDaoImpl extends TypeDaoImpl<DSplit, java.lang.Long> 

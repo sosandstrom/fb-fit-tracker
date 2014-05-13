@@ -1,5 +1,7 @@
 package com.wadpam.tracker.api;
 
+import com.google.appengine.api.utils.SystemProperty;
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.wadpam.tracker.dao.DParticipantDao;
 import com.wadpam.tracker.dao.DRaceDao;
@@ -9,6 +11,7 @@ import com.wadpam.tracker.domain.DParticipant;
 import com.wadpam.tracker.domain.DRace;
 import com.wadpam.tracker.domain.DSplit;
 import com.wadpam.tracker.domain.TrackPoint;
+import com.wadpam.tracker.extractor.DemoExtractor;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,11 +55,20 @@ public class PublicResource {
     @Inject
     private DParticipantDao participantDao;
     
-    @Inject
-    private DRaceDao raceDao;
+    private final DRaceDao raceDao;
     
     @Inject
     private DSplitDao splitDao;
+    
+    @Inject
+    public PublicResource(DRaceDao raceDao) {
+        this.raceDao = raceDao;
+        if (SystemProperty.Environment.Value.Development == SystemProperty.environment.value()) {
+            raceDao.persist(123L, null, "Demo ", DemoExtractor.class.getName(), 
+                    "https://broker-web.appspot.com/img/FitnessTracker_1024.png", 
+                    "", new Date(), "Europe/Stockholm");
+        }
+    }
     
     @GET
     @Path("course/{keyString}")
@@ -79,9 +91,15 @@ public class PublicResource {
         
         meta(sb, "fb:app_id", TrackerResource.APP_ID);
         meta(sb, "og:type", "fitness.course");
-        meta(sb, "og:url", "https://broker-web.appspot.com/pub/course/" + splitKeyString);
         meta(sb, "og:title", race.getDisplayName());
-        meta(sb, "og:image", "https://s-static.ak.fbcdn.net/images/devsite/attachment_blank.png");
+        meta(sb, "og:site_name", "Fitness Tracker");
+        meta(sb, "og:url", "https://broker-web.appspot.com/pub/course/" + splitKeyString);
+        String ogImage = "http://fitness.wadpam.com/img/FT_mobile_large.png";
+        if (!Strings.isNullOrEmpty(race.getImageUri())) {
+            ogImage = race.getImageUri();
+        }
+        meta(sb, "og:image", ogImage);
+        meta(sb, "fitness:live_text", "Send me cheers along " + race.getDisplayName() + " by liking or commenting on this post!");
         
         writeActivityDataPoints(sb, participant, participantSplits, raceKey, race, raceSplits);
         
@@ -121,6 +139,7 @@ public class PublicResource {
         }
         UpdateRaceRequest race = new UpdateRaceRequest();
         race.setDisplayName(dRace.getDisplayName());
+        race.setImageUri(dRace.getImageUri());
         race.setTimeZone(dRace.getTimeZone());
         SimpleDateFormat sdf = DRaceDaoBean.getDateFormat(dRace.getTimeZone());
         race.setStartTime(null != dRace.getStartDate() ? 
@@ -163,7 +182,7 @@ public class PublicResource {
             
             // linear interpolation between splits
             double factor = ((double) (next.getTimestamp() - prevPartSplit)) / ((double) (next.getTrackPointId() - prevRaceSplit));
-            LOGGER.debug("factor for split {} is {}", next.getName(), factor);
+            //LOGGER.debug("factor for split {} is {}", next.getName(), factor);
             
             do {
                 trkpt = ptIterator.next();
@@ -184,6 +203,13 @@ public class PublicResource {
             } while (trkpt.getT() < next.getTrackPointId());
             LOGGER.debug("At split, t is {}, trkpt.T is {}", t, trkpt.getT());
 
+            // The Place additional property can only be used when the user is 
+            // at the physical location at the time the action happens.
+//            if (DSplitDao.NAME_START.equals(next.getName())) {
+//                meta(sb, "place:location:latitude", Float.toString(trkpt.getLat()));
+//               meta(sb, "place:location:longitude", Float.toString(trkpt.getLon()));
+//            }
+            
             // tag split metrics with distance 
             meta(sb, "fitness:metrics:distance:value", Float.toString(next.getDistance()/1000.0f));
             meta(sb, "fitness:metrics:distance:units", "km");

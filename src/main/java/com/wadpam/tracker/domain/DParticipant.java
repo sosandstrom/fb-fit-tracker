@@ -32,6 +32,9 @@ public class DParticipant extends AbstractLongEntity {
     @Basic
     private String extUserId;
     
+    @Basic
+    private Integer status;
+    
     public Long getRaceId() {
         return raceId;
     }
@@ -62,6 +65,14 @@ public class DParticipant extends AbstractLongEntity {
 
     public void setExtUserId(String extUserId) {
         this.extUserId = extUserId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
     
 }

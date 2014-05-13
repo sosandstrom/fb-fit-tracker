@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -35,7 +34,7 @@ import org.slf4j.LoggerFactory;
 @Path("api/tracker")
 @Produces(MediaType.APPLICATION_JSON)
 public class TrackerResource {
-    public static final String APP_ID = "255653361131262";
+    public static final String APP_ID = "478161362293304"; //255653361131262";
     
     static final Logger LOGGER = LoggerFactory.getLogger(TrackerResource.class);
     
@@ -72,7 +71,7 @@ public class TrackerResource {
             @QueryParam("extUserId") String extUserId) {
         Long userId = OAuth2Filter.getUserId(request);
         DParticipant participant = participantDao.persist(null, null, extUserId, 
-                raceId, userId);
+                raceId, DParticipantDao.STATUS_PENDING, userId);
         return Response.ok(participant).build();
     }
 
@@ -114,6 +113,7 @@ public class TrackerResource {
         }
         
         NetworkTemplate template = new NetworkTemplate();
+        template.setAccept("*/*");
         Map<String, String> requestHeaders = ImmutableMap.of(NetworkTemplate.CONTENT_TYPE, NetworkTemplate.MIME_FORM);
         R response = template.post("https://graph.facebook.com" + path, requestHeaders, params, responseClass);
         return response;

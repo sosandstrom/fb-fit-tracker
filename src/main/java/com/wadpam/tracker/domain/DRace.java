@@ -26,6 +26,9 @@ public class DRace extends AbstractLongEntity {
   private String extractorClassname;
 
   @Basic
+  private String imageUri;
+  
+  @Basic
   private String queryUrl;
 
   @Basic
@@ -80,6 +83,14 @@ public class DRace extends AbstractLongEntity {
 
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 
 }

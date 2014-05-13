@@ -12,7 +12,7 @@ import net.sf.mardao.core.geo.DLocation;
 /**
  * DAO interface with finder methods for DParticipant entities.
  *
- * Generated on 2014-02-23T20:33:00.895+0100.
+ * Generated on 2014-04-18T20:33:18.209+0200.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Long> {
@@ -31,6 +31,8 @@ public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Lo
 	static final String COLUMN_NAME_EXTUSERID = "extUserId";
 	/** Column name for field raceId is "raceId" */
 	static final String COLUMN_NAME_RACEID = "raceId";
+	/** Column name for field status is "status" */
+	static final String COLUMN_NAME_STATUS = "status";
 	/** Column name for field updatedBy is "updatedBy" */
 	static final String COLUMN_NAME_UPDATEDBY = "updatedBy";
 	/** Column name for field updatedDate is "updatedDate" */
@@ -44,6 +46,7 @@ public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Lo
 		COLUMN_NAME_CREATEDDATE,
 		COLUMN_NAME_EXTUSERID,
 		COLUMN_NAME_RACEID,
+		COLUMN_NAME_STATUS,
 		COLUMN_NAME_UPDATEDBY,
 		COLUMN_NAME_UPDATEDDATE,
 		COLUMN_NAME_USERID);
@@ -53,6 +56,7 @@ public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Lo
 		COLUMN_NAME_CREATEDDATE,
 		COLUMN_NAME_EXTUSERID,
 		COLUMN_NAME_RACEID,
+		COLUMN_NAME_STATUS,
 		COLUMN_NAME_UPDATEDBY,
 		COLUMN_NAME_UPDATEDDATE,
 		COLUMN_NAME_USERID);
@@ -176,6 +180,31 @@ public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Lo
 
 
 	/**
+	 * query-by method for field status
+	 * @param status the specified attribute
+	 * @return an Iterable of DParticipants for the specified status
+	 */
+	Iterable<DParticipant> queryByStatus(java.lang.Integer status);
+		
+	/**
+	 * query-keys-by method for field status
+	 * @param status the specified attribute
+	 * @return an Iterable of DParticipants for the specified status
+	 */
+	Iterable<java.lang.Long> queryKeysByStatus(java.lang.Integer status);
+
+	/**
+	 * query-page-by method for field status
+	 * @param status the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DParticipants for the specified status
+	 */
+	CursorPage<DParticipant> queryPageByStatus(java.lang.Integer status,
+            int pageSize, String cursorString);
+
+
+	/**
 	 * query-by method for field updatedBy
 	 * @param updatedBy the specified attribute
 	 * @return an Iterable of DParticipants for the specified updatedBy
@@ -277,6 +306,7 @@ public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Lo
 		java.lang.String actionId, 
 		java.lang.String extUserId, 
 		java.lang.Long raceId, 
+		java.lang.Integer status, 
 		java.lang.Long userId);	
 
 	/**
@@ -285,6 +315,7 @@ public interface GeneratedDParticipantDao extends Dao<DParticipant, java.lang.Lo
 	 DParticipant persist(java.lang.String actionId, 
                 java.lang.String extUserId, 
                 java.lang.Long raceId, 
+                java.lang.Integer status, 
                 java.lang.Long userId);
 
 }

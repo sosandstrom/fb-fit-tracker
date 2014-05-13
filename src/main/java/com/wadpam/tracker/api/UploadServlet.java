@@ -60,6 +60,7 @@ public class UploadServlet extends HttpServlet {
                 // defQ.add(TaskOptions.Builder.withUrl("/_admin/UploadServlet/parse").param(NAME_BLOBKEY, blobKey.getKeyString()));
                 race = raceDao.persist(null, blobKey, "Race", VasaloppsExtractor.class.getName(), 
                         "http://results.vasaloppet.se/2012/?content=detail&fpid=search&pid=search&lang=SE&event=%C3%96SM_9999991678885900000002FD&idp=", 
+                        "https://broker-web.appspot.com/img/FitnessTracker_1024.png", 
                         null, "Europe/Stockholm");
             }
             resp.setContentType(MediaType.APPLICATION_JSON);

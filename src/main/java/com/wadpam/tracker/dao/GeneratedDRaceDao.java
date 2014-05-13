@@ -12,7 +12,7 @@ import net.sf.mardao.core.geo.DLocation;
 /**
  * DAO interface with finder methods for DRace entities.
  *
- * Generated on 2014-02-23T20:33:00.895+0100.
+ * Generated on 2014-04-18T20:33:18.209+0200.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
@@ -31,6 +31,8 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 	static final String COLUMN_NAME_DISPLAYNAME = "displayName";
 	/** Column name for field extractorClassname is "extractorClassname" */
 	static final String COLUMN_NAME_EXTRACTORCLASSNAME = "extractorClassname";
+	/** Column name for field imageUri is "imageUri" */
+	static final String COLUMN_NAME_IMAGEURI = "imageUri";
 	/** Column name for field queryUrl is "queryUrl" */
 	static final String COLUMN_NAME_QUERYURL = "queryUrl";
 	/** Column name for field startDate is "startDate" */
@@ -48,6 +50,7 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 		COLUMN_NAME_CREATEDDATE,
 		COLUMN_NAME_DISPLAYNAME,
 		COLUMN_NAME_EXTRACTORCLASSNAME,
+		COLUMN_NAME_IMAGEURI,
 		COLUMN_NAME_QUERYURL,
 		COLUMN_NAME_STARTDATE,
 		COLUMN_NAME_TIMEZONE,
@@ -59,6 +62,7 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 		COLUMN_NAME_CREATEDDATE,
 		COLUMN_NAME_DISPLAYNAME,
 		COLUMN_NAME_EXTRACTORCLASSNAME,
+		COLUMN_NAME_IMAGEURI,
 		COLUMN_NAME_QUERYURL,
 		COLUMN_NAME_STARTDATE,
 		COLUMN_NAME_TIMEZONE,
@@ -191,6 +195,31 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 	 * @return a Page of DRaces for the specified extractorClassname
 	 */
 	CursorPage<DRace> queryPageByExtractorClassname(java.lang.String extractorClassname,
+            int pageSize, String cursorString);
+
+
+	/**
+	 * query-by method for field imageUri
+	 * @param imageUri the specified attribute
+	 * @return an Iterable of DRaces for the specified imageUri
+	 */
+	Iterable<DRace> queryByImageUri(java.lang.String imageUri);
+		
+	/**
+	 * query-keys-by method for field imageUri
+	 * @param imageUri the specified attribute
+	 * @return an Iterable of DRaces for the specified imageUri
+	 */
+	Iterable<java.lang.Long> queryKeysByImageUri(java.lang.String imageUri);
+
+	/**
+	 * query-page-by method for field imageUri
+	 * @param imageUri the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DRaces for the specified imageUri
+	 */
+	CursorPage<DRace> queryPageByImageUri(java.lang.String imageUri,
             int pageSize, String cursorString);
 
 
@@ -338,6 +367,7 @@ public interface GeneratedDRaceDao extends Dao<DRace, java.lang.Long> {
 		com.google.appengine.api.blobstore.BlobKey blobKey, 
 		java.lang.String displayName, 
 		java.lang.String extractorClassname, 
+		java.lang.String imageUri, 
 		java.lang.String queryUrl, 
 		java.util.Date startDate, 
 		java.lang.String timeZone);	

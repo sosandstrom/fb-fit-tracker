@@ -16,6 +16,7 @@ import com.wadpam.tracker.domain.DRace;
 import com.wadpam.tracker.domain.DSplit;
 import com.wadpam.tracker.domain.TrackPoint;
 import com.wadpam.tracker.extractor.AbstractSplitsExtractor;
+import com.wadpam.tracker.extractor.DemoExtractor;
 import com.wadpam.tracker.opengraph.FitnessRuns;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -143,6 +144,10 @@ public class AdminResource {
             extractor.setAdminResource(this);
             extractor.process(race);
         }
+        
+        if (DemoExtractor.class.getName().equals(race.getExtractorClassname())) {
+            updateDemoRace(race, System.currentTimeMillis());
+        }
     }
 
 
@@ -191,8 +196,8 @@ public class AdminResource {
             }
             else {
                 if (DSplitDao.NAME_FINISH.equals(split.getName())) {
-                    // remove extUserId to disable future checks
-                    participant.setExtUserId(null);
+                    // update status to disable future checks
+                    participant.setStatus(DParticipantDao.STATUS_FINISHED);
                     participantDao.update(participant);
                 }        
                 
@@ -209,14 +214,13 @@ public class AdminResource {
         FitnessRuns run = new FitnessRuns();
         run.setApp_id(appId);
         run.setTitle(title);
-        run.setCourse(courseUrl);
+        //run.setCourse(courseUrl);
         
         Map<String,String> response = TrackerResource.postStandardObject("/me/fitness.runs", 
                 accessToken, Map.class, run,
                 ImmutableMap.builder().put("course", courseUrl)
                 .put("start_time", DRaceDaoBean.SDF.format(new Date(startTime)))
                 .put("expires_in", "86400") // 24h
-                .put("fb:live_text", "Send me cheers along the way by liking or commenting on this post.")
                 .put("fb:explicitly_shared", "true")
                 //.put("privacy", "{\"value\":\"SELF\"}")
                 .build());
@@ -252,16 +256,25 @@ public class AdminResource {
             return Response.status(Status.NOT_FOUND).build();
         }
         race.setDisplayName(body.getDisplayName());
+        race.setImageUri(body.getImageUri());
         race.setTimeZone(body.getTimeZone());
         try {
             SimpleDateFormat sdf = DRaceDaoBean.getDateFormat(body.getTimeZone());
             race.setStartDate(sdf.parse(body.getStartTime()));
         } catch (ParseException unixTimestamp) {
             LOGGER.warn("Parsing {}", body.getStartTime());
-            race.setStartDate(new Date(Long.parseLong(body.getStartTime())));
         }
         raceDao.update(race);
         
         return Response.ok().build();
+    }
+
+    private void updateDemoRace(final DRace race, final long currentTimeMillis) {
+        // about to close (14h past start date) ?
+        if (race.getStartDate().getTime() + 12L*60L*60L*1000L <= currentTimeMillis) {
+            race.setStartDate(new Date(currentTimeMillis));
+            raceDao.update(race);
+            LOGGER.info("Updated demo race start time.");
+        }
     }
 }

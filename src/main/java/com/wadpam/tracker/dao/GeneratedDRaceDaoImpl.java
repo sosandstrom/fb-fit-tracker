@@ -20,7 +20,7 @@ import com.wadpam.tracker.domain.DRace;
 /**
  * The DRace domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2014-02-23T20:33:00.895+0100.
+ * Generated on 2014-04-18T20:33:18.209+0200.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long> 
@@ -84,6 +84,9 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
         else if (COLUMN_NAME_EXTRACTORCLASSNAME.equals(name)) {
             value = domain.getExtractorClassname();
         }
+        else if (COLUMN_NAME_IMAGEURI.equals(name)) {
+            value = domain.getImageUri();
+        }
         else if (COLUMN_NAME_QUERYURL.equals(name)) {
             value = domain.getQueryUrl();
         }
@@ -136,6 +139,9 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
         else if (COLUMN_NAME_EXTRACTORCLASSNAME.equals(name)) {
             clazz = java.lang.String.class;
         }
+        else if (COLUMN_NAME_IMAGEURI.equals(name)) {
+            clazz = java.lang.String.class;
+        }
         else if (COLUMN_NAME_QUERYURL.equals(name)) {
             clazz = java.lang.String.class;
         }
@@ -182,6 +188,9 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
         }
         else if (COLUMN_NAME_EXTRACTORCLASSNAME.equals(name)) {
             domain.setExtractorClassname((java.lang.String) value);
+        }
+        else if (COLUMN_NAME_IMAGEURI.equals(name)) {
+            domain.setImageUri((java.lang.String) value);
         }
         else if (COLUMN_NAME_QUERYURL.equals(name)) {
             domain.setQueryUrl((java.lang.String) value);
@@ -473,6 +482,38 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 	/**
          * {@inheritDoc}
 	 */
+	public final Iterable<DRace> queryByImageUri(java.lang.String imageUri) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_IMAGEURI, imageUri);
+            return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
+	}
+	
+	/**
+	 * query-key-by method for attribute field imageUri
+	 * @param imageUri the specified attribute
+	 * @return an Iterable of keys to the DRaces with the specified attribute
+	 */
+	public final Iterable<java.lang.Long> queryKeysByImageUri(java.lang.String imageUri) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_IMAGEURI, imageUri);
+            return queryIterableKeys(0, -1, null, null, null, false, null, false, filter);
+	}
+
+	/**
+	 * query-page-by method for field imageUri
+	 * @param imageUri the specified attribute
+         * @param pageSize the number of domain entities in the page
+         * @param cursorString non-null if get next page
+	 * @return a Page of DRaces for the specified imageUri
+	 */
+	public final CursorPage<DRace> queryPageByImageUri(java.lang.String imageUri,
+            int pageSize, String cursorString) {
+            final Filter filter = createEqualsFilter(COLUMN_NAME_IMAGEURI, imageUri);
+            return queryPage(false, pageSize, null, null, null, false, null, false, cursorString, filter);
+        }
+
+	 
+	/**
+         * {@inheritDoc}
+	 */
 	public final Iterable<DRace> queryByQueryUrl(java.lang.String queryUrl) {
             final Filter filter = createEqualsFilter(COLUMN_NAME_QUERYURL, queryUrl);
             return queryIterable(false, 0, -1, null, null, null, false, null, false, filter);
@@ -647,6 +688,7 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
 		com.google.appengine.api.blobstore.BlobKey blobKey, 
 		java.lang.String displayName, 
 		java.lang.String extractorClassname, 
+		java.lang.String imageUri, 
 		java.lang.String queryUrl, 
 		java.util.Date startDate, 
 		java.lang.String timeZone) {
@@ -668,6 +710,7 @@ public class GeneratedDRaceDaoImpl extends TypeDaoImpl<DRace, java.lang.Long>
                     domain.setBlobKey(blobKey);
                     domain.setDisplayName(displayName);
                     domain.setExtractorClassname(extractorClassname);
+                    domain.setImageUri(imageUri);
                     domain.setQueryUrl(queryUrl);
                     domain.setStartDate(startDate);
                     domain.setTimeZone(timeZone);

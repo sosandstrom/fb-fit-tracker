@@ -9,6 +9,9 @@
                 <label for="raceName">Race name</label>
                 <input type="text" id="raceName" name="raceName" /><br/>
                 
+                <label for="imageUri">Image URI</label>
+                <input type="text" id="imageUri" name="imageUri" /><br/>
+                
                 <label for="timeZone">Time zone</label>
                 <select id="timeZone" name="timeZone"></select><br/>
                 
@@ -70,6 +73,7 @@ function updateRace() {
     var raceId = getParameterByName("raceId");
     crud_Update("/_adm/course", raceId, {
         displayName: $("#raceName").val(),
+        imageUri: $("#imageUri").val(),
         timeZone: $("#timeZone").val(),
         startTime: $("#startTime").val()
     })
@@ -89,6 +93,7 @@ function loadRace() {
     crud_Read("/pub/race", raceId)
     .done(function(data, statusText, jqXHR) {
         $("#raceName").val(data.displayName);
+        $("#imageUri").val(data.imageUri);
         $("#timeZone").val(data.timeZone);
         $("#startTime").val(data.startDate);
     });
