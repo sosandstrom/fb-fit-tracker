@@ -26,11 +26,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -78,6 +80,21 @@ public class AdminResource {
     }
     
     @POST
+    @Path("participant/{participantId}")
+    public Response checkParticipant(@PathParam("participantId") Long participantId,
+            @FormParam("raceId") Long raceId) {
+        final DRace race = raceDao.findByPrimaryKey(raceId);
+        AbstractSplitsExtractor extractor = createExtractor(race,
+                raceDao, participantDao, splitDao);
+        if (null != extractor) {
+            extractor.setAdminResource(this);
+            extractor.processParticipant(participantId);
+        }
+        
+        return Response.ok().build();
+    }
+    
+    @POST
     @Path("course/{raceId}/split")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createCourseSplit(@PathParam("raceId") Long raceId,
@@ -121,6 +138,12 @@ public class AdminResource {
         
         // post / update fitness object
         upsertFitnessObject(participant, split);
+
+        // update status to disable future checks
+        if (DSplitDao.NAME_FINISH.equals(courseSplit.getName())) {
+            participant.setStatus(DParticipantDao.STATUS_FINISHED);
+            participantDao.update(participant);
+        }
         
         return Response.ok(split).build();
     }
@@ -160,7 +183,7 @@ public class AdminResource {
                 extractor.setParticipantDao(participantDao);
                 extractor.setRaceDao(raceDao);
                 extractor.setSplitDao(splitDao);
-                
+                extractor.setRace(race);
             } catch (InstantiationException ex) {
                 LOGGER.error("Instantiating extractor", ex);
             } catch (IllegalAccessException ex) {

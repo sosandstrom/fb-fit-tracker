@@ -1,5 +1,11 @@
 package com.wadpam.tracker.extractor;
 
+import com.google.appengine.api.memcache.Expiration;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.common.base.Strings;
 import com.wadpam.tracker.api.AdminResource;
 import com.wadpam.tracker.api.CreateSplitRequest;
@@ -30,7 +36,15 @@ public abstract class AbstractSplitsExtractor {
     protected DParticipantDao participantDao;
     protected DRaceDao raceDao;
     protected DSplitDao splitDao;
+    
+    protected DRace race;
+    
+    private final MemcacheService memcacheService;
 
+    public AbstractSplitsExtractor() {
+        memcacheService = MemcacheServiceFactory.getMemcacheService();
+    }
+    
     public void process(DRace race) {
         // query and add participants:
         Iterable<DParticipant> r = participantDao.queryPending(race.getId());
@@ -47,20 +61,37 @@ public abstract class AbstractSplitsExtractor {
         
         // query and map race splits
         final Object raceKey = raceDao.getPrimaryKey(race);
-        final TreeMap<Long, DSplit> raceSplits = splitDao.mapByParentKey(raceKey);
+        final String splitsKey = "splits." + raceDao.getKeyString(raceKey);
+        LOGGER.debug("Memcache splitsKey={}", splitsKey);
         
+        TreeMap<Long, DSplit> raceSplits = (TreeMap<Long, DSplit>) memcacheService.get(splitsKey);
+        if (null == raceSplits) {
+            raceSplits = splitDao.mapByParentKey(raceKey);
+            memcacheService.put(splitsKey, raceSplits, Expiration.byDeltaSeconds(3600));
+        }
+        
+        Queue queue = QueueFactory.getDefaultQueue();
         // now, process all properly registered participants
         for (DParticipant participant : registered) {
-            LOGGER.debug("participant id={}, userId={}", participant.getId(), participant.getUserId());
-            try {
-                final Map<DSplit,DSplit> splits = getPassedSplits(race, raceSplits, 
-                        participant);
-                if (null != splits && !splits.isEmpty()) {
-                    updateSplits(race, participant, raceSplits, splits);
-                }
-            } catch (IOException ex) {
-                LOGGER.warn("Getting splits", ex);
+            queue.add(TaskOptions.Builder.withUrl("/_adm/participant/" + participant.getId()).param("raceId", Long.toString(race.getId())));
+        }
+    }
+    
+    public void processParticipant(Long participantId) {
+        DParticipant participant = participantDao.findByPrimaryKey(participantId);
+        LOGGER.debug("participant id={}, userId={}", participantId, participant.getUserId());
+
+        final Object raceKey = raceDao.getPrimaryKey(null, participant.getRaceId());
+        final String splitsKey = "splits." + raceDao.getKeyString(raceKey);
+        TreeMap<Long, DSplit> raceSplits = (TreeMap<Long, DSplit>) memcacheService.get(splitsKey);
+        try {
+            final Map<DSplit,DSplit> splits = getPassedSplits(race, raceSplits, 
+                    participant);
+            if (null != splits && !splits.isEmpty()) {
+                updateSplits(race, participantId, raceSplits, splits);
             }
+        } catch (Exception ex) {
+            LOGGER.warn("Getting splits for participant {}", participantId);
         }
     }
 
@@ -69,38 +100,30 @@ public abstract class AbstractSplitsExtractor {
 
     public abstract TreeMap<String,String> searchForParticipants(DRace race, String searchName, String firstName);
     
-    private void updateSplits(DRace race, DParticipant participant, 
+    private void updateSplits(DRace race, Long participantId, 
             TreeMap<Long, DSplit> raceSplits, Map<DSplit,DSplit> passedSplitsMap) {
         
         if (!passedSplitsMap.isEmpty()) {
             
-            final Object participantKey = participantDao.getPrimaryKey(participant);
+            final Object participantKey = participantDao.getPrimaryKey(null, participantId);
             final TreeMap<Long, DSplit> persistedSplits = splitDao.mapByParentKey(participantKey);
             
             // any new passed splits?
-            if (persistedSplits.size() < passedSplitsMap.size()) {
-                for (DSplit raceSplit : raceSplits.values()) {
-                    DSplit passedSplit = passedSplitsMap.get(raceSplit);
-                    if (!persistedSplits.containsKey(passedSplit.getTimestamp())) {
-                        
-                        CreateSplitRequest body = new CreateSplitRequest();
-                        body.setName(passedSplit.getName());
-                        body.setElapsedSeconds(Long.toString(passedSplit.getTimestamp()));
-                        body.setRaceSplitId(raceSplit.getId());
-                        LOGGER.info("Creating participant split {}", passedSplit);
-                        adminResource.createParticipantSplit(participant.getId(), 
-                                body);
-                        return;
-                    }
-                    else {
-                        // LOGGER.debug("Split {} already persisted.", passedSplit);
-                        if (DSplitDao.NAME_FINISH.equals(raceSplit.getName())) {
-                            
-                            // update status to disable future checks
-                            participant.setStatus(DParticipantDao.STATUS_FINISHED);
-                            participantDao.update(participant);
-                        }
-                    }
+            for (DSplit raceSplit : raceSplits.values()) {
+                DSplit passedSplit = passedSplitsMap.get(raceSplit);
+                if (!persistedSplits.containsKey(passedSplit.getTimestamp())) {
+
+                    CreateSplitRequest body = new CreateSplitRequest();
+                    body.setName(passedSplit.getName());
+                    body.setElapsedSeconds(Long.toString(passedSplit.getTimestamp()));
+                    body.setRaceSplitId(raceSplit.getId());
+                    LOGGER.info("Creating participant split {}", passedSplit);
+                    adminResource.createParticipantSplit(participantId, 
+                            body);
+                    return;
+                }
+                else {
+                    LOGGER.debug("Split {} already persisted.", passedSplit);
                 }
             }
         }
@@ -120,6 +143,10 @@ public abstract class AbstractSplitsExtractor {
 
     public void setAdminResource(AdminResource adminResource) {
         this.adminResource = adminResource;
+    }
+
+    public void setRace(DRace race) {
+        this.race = race;
     }
 
 }
